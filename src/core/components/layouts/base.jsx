@@ -68,46 +68,16 @@ export default class BaseLayout extends React.Component {
 
       <div className='swagger-ui'>
           <div>
-            <Errors/>
-            <Row className="information-container">
-              <Col mobile={12}>
-                { info.count() ? (
-                  <Info info={ info } url={ url } host={ host } basePath={ basePath } externalDocs={externalDocs} getComponent={getComponent}/>
-                ) : null }
-              </Col>
-            </Row>
             { schemes && schemes.size || securityDefinitions ? (
-              <div className="scheme-container">
                 <Col className="schemes wrapper" mobile={12}>
-                  { schemes && schemes.size ? (
-                    <Schemes
-                      currentScheme={specSelectors.operationScheme()}
-                      schemes={ schemes }
-                      specActions={ specActions } />
-                  ) : null }
 
                   { securityDefinitions ? (
                     <AuthorizeBtn />
                   ) : null }
                 </Col>
-              </div>
             ) : null }
 
-            { servers && servers.size ? (
-              <div className="server-container">
-                <Col className="servers wrapper" mobile={12}>
-                  <Servers
-                    servers={servers}
-                    currentServer={oas3Selectors.selectedServer()}
-                    setSelectedServer={oas3Actions.setSelectedServer}
-                    setServerVariableValue={oas3Actions.setServerVariableValue}
-                    getServerVariable={oas3Selectors.serverVariableValue}
-                    getEffectiveServerValue={oas3Selectors.serverEffectiveValue}
-                    />
-                </Col>
-              </div>
 
-            ) : null}
 
             {
               filter === null || filter === false ? null :
@@ -121,11 +91,6 @@ export default class BaseLayout extends React.Component {
             <Row>
               <Col mobile={12} desktop={12} >
                 <Operations/>
-              </Col>
-            </Row>
-            <Row>
-              <Col mobile={12} desktop={12} >
-                <Models/>
               </Col>
             </Row>
           </div>

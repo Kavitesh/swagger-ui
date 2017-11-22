@@ -583,6 +583,7 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
 }
 
 export const getSampleSchema = (schema, contentType="", config={}) => {
+	console.log(schema);
   if (/xml/.test(contentType)) {
     if (!schema.xml || !schema.xml.name) {
       schema.xml = schema.xml || {}
@@ -598,7 +599,9 @@ export const getSampleSchema = (schema, contentType="", config={}) => {
     }
     return memoizedCreateXMLExample(schema, config)
   }
-
+  if(schema.xml){
+	return "{ \"" + schema.xml.name +"\": "+JSON.stringify(memoizedSampleFromSchema(schema, config), null, 3)+"\n}"
+  }
   return JSON.stringify(memoizedSampleFromSchema(schema, config), null, 2)
 }
 
@@ -692,3 +695,25 @@ export function getAcceptControllingResponse(responses) {
 
 export const createDeepLinkPath = (str) => typeof str == "string" || str instanceof String ? str.trim().replace(/\s/g, "_") : ""
 export const escapeDeepLinkPath = (str) => cssEscape( createDeepLinkPath(str) )
+
+
+
+export const show = (displayClass) => {
+	var all = document.getElementsByClassName("opblock-show");
+	for (var i = 0; i < all.length; i++) {
+		if(!all[i].classList.contains("opblock-hidden")){
+			all[i].classList.add("opblock-hidden");
+		}
+	}
+	var x = document.getElementsByClassName(displayClass);
+	x[0].classList.remove("opblock-hidden");
+}
+export const showHide = (displayClass) => {
+	
+	var x = document.getElementsByClassName(displayClass);
+	if(x[0].classList.contains("opblock-hidden")){
+		x[0].classList.remove("opblock-hidden");
+	}else{
+		x[0].classList.add("opblock-hidden");
+	}
+}

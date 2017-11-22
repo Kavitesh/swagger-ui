@@ -1,6 +1,10 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { createDeepLinkPath, sanitizeUrl } from "core/utils"
+import { helpers } from "swagger-client"
+import { createDeepLinkPath } from "core/utils"
+import { show } from "core/utils"
+import { showHide } from "core/utils"
+const { opId } = helpers
 
 export default class Operations extends React.Component {
 
@@ -17,22 +21,40 @@ export default class Operations extends React.Component {
   };
 
   render() {
+  
     let {
       specSelectors,
+      specActions,
+      oas3Actions,
       getComponent,
       layoutSelectors,
       layoutActions,
-      getConfigs
+      authActions,
+      authSelectors,
+      getConfigs,
+      fn
     } = this.props
 
     let taggedOps = specSelectors.taggedOperations()
 
-    const OperationContainer = getComponent("OperationContainer", true)
+    let Models = getComponent("Models", true)
+    const Operation = getComponent("operation")
     const Collapse = getComponent("Collapse")
     const Markdown = getComponent("Markdown")
 
+    let info = specSelectors.info()
+	
+    let url = specSelectors.url()
+    let basePath = specSelectors.basePath()
+    let host = specSelectors.host()
+    let externalDocs = specSelectors.externalDocs()
+    let Info = getComponent("info")
+	
+    let showSummary = layoutSelectors.showSummary()
     let {
       docExpansion,
+      displayOperationId,
+      displayRequestDuration,
       maxDisplayedTags,
       deepLinking
     } = getConfigs()
@@ -54,6 +76,52 @@ export default class Operations extends React.Component {
     }
 
     return (
+	
+	<table><tbody><tr>
+	<td>
+	<div className='sidebar' >
+	  <div className='sidebarNavigator'> Navigator<button onClick={showHide.bind(null,'sidebarBody')} className="sidebarButton">
+    <svg viewBox="0 0 20 20" id="large-arrow-down" width="100%" height="100%">
+      <path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path>
+    </svg>
+  </button>  
+  </div>
+  	<div className='sidebarBody'>
+					<div className="sidebar-root-item sidebar-root-item-button" onClick={show.bind(null,"info")}>Overview		</div>
+	{
+	
+		taggedOps.map( (tagObj, tag) => {
+              let operations = tagObj.get("operations")
+              let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
+			return(
+				<div key={tag}>
+					<div div className="sidebar-root-item">{tag}{
+						operations.map( op => {
+						
+							const path = op.get("path", "")
+							const method = op.get("method", "")
+							const operationId =
+							op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
+							return (
+							<div className="sidebar-item sidebutton" key={operationId} name={operationId} onClick={show.bind(null,operationId)}>{operationId}</div>
+							)
+						}).toArray()
+						}
+						
+            </div>
+				</div>
+			)
+		}).toArray()
+		
+		}
+					<div className="sidebar-root-item sidebar-root-item-button"  onClick={show.bind(null,"models")}>Models</div>
+					</div>
+					</div>
+	</td>
+	<td>
+		{ info.count() ? (
+                  <Info info={ info } url={ url } host={ host } basePath={ basePath } externalDocs={externalDocs} getComponent={getComponent}/>
+                ) : null }
         <div>
           {
             taggedOps.map( (tagObj, tag) => {
@@ -91,7 +159,7 @@ export default class Operations extends React.Component {
                           { tagExternalDocsUrl ? ": " : null }
                           { tagExternalDocsUrl ?
                             <a
-                              href={sanitizeUrl(tagExternalDocsUrl)}
+                              href={tagExternalDocsUrl}
                               onClick={(e) => e.stopPropagation()}
                               target={"_blank"}
                             >{tagExternalDocsUrl}</a> : null
@@ -110,15 +178,47 @@ export default class Operations extends React.Component {
                   <Collapse isOpened={showTag}>
                     {
                       operations.map( op => {
-                        const path = op.get("path")
-                        const method = op.get("method")
 
-                        return <OperationContainer
-                          key={`${path}-${method}`}
-                          op={op}
-                          path={path}
-                          method={method}
-                          tag={tag}
+                        const path = op.get("path", "")
+                        const method = op.get("method", "")
+                        const jumpToKey = `paths.${path}.${method}`
+
+                        const operationId =
+                        op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
+                        const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
+
+                        const allowTryItOut = specSelectors.allowTryItOutFor(op.get("path"), op.get("method"))
+                        const response = specSelectors.responseFor(op.get("path"), op.get("method"))
+                        const request = specSelectors.requestFor(op.get("path"), op.get("method"))
+
+                        return <Operation
+                          {...op.toObject()}
+
+                          isShownKey={isShownKey}
+                          jumpToKey={jumpToKey}
+                          showSummary={showSummary}
+                          key={isShownKey}
+                          response={ response }
+                          request={ request }
+                          allowTryItOut={allowTryItOut}
+
+                          displayOperationId={displayOperationId}
+                          displayRequestDuration={displayRequestDuration}
+
+                          specActions={ specActions }
+                          specSelectors={ specSelectors }
+
+                          oas3Actions={oas3Actions}
+
+                          layoutActions={ layoutActions }
+                          layoutSelectors={ layoutSelectors }
+
+                          authActions={ authActions }
+                          authSelectors={ authSelectors }
+
+                          getComponent={ getComponent }
+                          fn={fn}
+                          getConfigs={ getConfigs }
                         />
                       }).toArray()
                     }
@@ -129,7 +229,11 @@ export default class Operations extends React.Component {
           }
 
           { taggedOps.size < 1 ? <h3> No operations defined in spec! </h3> : null }
+		  
+		  
+                <Models/>
         </div>
+		</td></tr></tbody></table>
     )
   }
 
