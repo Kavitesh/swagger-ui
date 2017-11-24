@@ -4,10 +4,17 @@ import { helpers } from "swagger-client"
 import { createDeepLinkPath } from "core/utils"
 import { show } from "core/utils"
 import { showHide } from "core/utils"
+import { showHideChild } from "core/utils"
+import { sidebarLoad} from "core/utils"
 const { opId } = helpers
 
 export default class Operations extends React.Component {
 
+    componentDidUpdate(){
+
+      sidebarLoad()
+
+    }
   static propTypes = {
     specSelectors: PropTypes.object.isRequired,
     specActions: PropTypes.object.isRequired,
@@ -76,49 +83,42 @@ export default class Operations extends React.Component {
     }
 
     return (
-	
-	<table><tbody><tr>
-	<td>
-	<div className='sidebar' >
-	  <div className='sidebarNavigator'> Navigator<button onClick={showHide.bind(null,'sidebarBody')} className="sidebarButton">
-    <svg viewBox="0 0 20 20" id="large-arrow-down" width="100%" height="100%">
-      <path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path>
-    </svg>
-  </button>  
-  </div>
-  	<div className='sidebarBody'>
-					<div className="sidebar-root-item sidebar-root-item-button" onClick={show.bind(null,"info")}>Overview		</div>
+      <div>
+  
+  <aside className='sidebar'>
+					<div className="sidebar-root-item sidebar-root-item-button" onClick={show.bind(null,"info","sidebar-info")} id="sidebar-info">Overview		</div>
 	{
 	
 		taggedOps.map( (tagObj, tag) => {
               let operations = tagObj.get("operations")
               let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
 			return(
-				<div key={tag}>
-					<div div className="sidebar-root-item">{tag}{
+					<div key={tag} className={"parent-"+ tag + " sidebar-root-item"}>
+          <span className="sidebar-root-item-fold" onClick={showHideChild.bind(null,tag,"sidebar-"+tag)} id={"sidebar-"+tag}>{tag}</span>{
 						operations.map( op => {
 						
 							const path = op.get("path", "")
 							const method = op.get("method", "")
 							const operationId =
 							op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
-							return (
-							<div className="sidebar-item sidebutton" key={operationId} name={operationId} onClick={show.bind(null,operationId)}>{operationId}</div>
-							)
+              
+              const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
+              
+              return (
+							<a className="opblock-hidden sidebar-item sidebutton" key={operationId} name={operationId} 
+              href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null,isShownKey,"sidebar-"+isShownKey.join("-"))} id={"sidebar-"+isShownKey.join("-")}>{operationId}</a>
+              )
 						}).toArray()
 						}
 						
             </div>
-				</div>
 			)
 		}).toArray()
 		
 		}
-					<div className="sidebar-root-item sidebar-root-item-button"  onClick={show.bind(null,"models")}>Models</div>
-					</div>
-					</div>
-	</td>
-	<td>
+					<div className="sidebar-root-item sidebar-root-item-button"  onClick={show.bind(null,"models","sidebar-models")}  id="sidebar-models">Models</div>
+	</aside>
+  <section className="main-section">
 		{ info.count() ? (
                   <Info info={ info } url={ url } host={ host } basePath={ basePath } externalDocs={externalDocs} getComponent={getComponent}/>
                 ) : null }
@@ -136,44 +136,6 @@ export default class Operations extends React.Component {
               return (
                 <div className={showTag ? "opblock-tag-section is-open" : "opblock-tag-section"} key={"operation-" + tag}>
 
-                  <h4
-                    onClick={() => layoutActions.show(isShownKey, !showTag)}
-                    className={!tagDescription ? "opblock-tag no-desc" : "opblock-tag" }
-                    id={isShownKey.join("-")}>
-                    <a
-                      className="nostyle"
-                      onClick={isDeepLinkingEnabled ? (e) => e.preventDefault() : null}
-                      href= {isDeepLinkingEnabled ? `#/${tag}` : null}>
-                      <span>{tag}</span>
-                    </a>
-                    { !tagDescription ? null :
-                        <small>
-                          <Markdown source={tagDescription} />
-                        </small>
-                    }
-
-                    <div>
-                    { !tagExternalDocsDescription ? null :
-                        <small>
-                          { tagExternalDocsDescription }
-                          { tagExternalDocsUrl ? ": " : null }
-                          { tagExternalDocsUrl ?
-                            <a
-                              href={tagExternalDocsUrl}
-                              onClick={(e) => e.stopPropagation()}
-                              target={"_blank"}
-                            >{tagExternalDocsUrl}</a> : null
-                          }
-                        </small>
-                    }
-                    </div>
-
-                    <button className="expand-operation" title="Expand operation" onClick={() => layoutActions.show(isShownKey, !showTag)}>
-                      <svg className="arrow" width="20" height="20">
-                        <use href={showTag ? "#large-arrow-down" : "#large-arrow"} xlinkHref={showTag ? "#large-arrow-down" : "#large-arrow"} />
-                      </svg>
-                    </button>
-                  </h4>
 
                   <Collapse isOpened={showTag}>
                     {
@@ -231,10 +193,15 @@ export default class Operations extends React.Component {
           { taggedOps.size < 1 ? <h3> No operations defined in spec! </h3> : null }
 		  
 		  
-                <Models/>
         </div>
-		</td></tr></tbody></table>
+		</section>
+
+    <Models/>
+
+    </div>
+    
     )
+    
   }
 
 }

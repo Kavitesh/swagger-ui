@@ -102,20 +102,17 @@ export default class ParameterRow extends Component {
     let value = parameter ? parameter.get("value") : ""
 
     return (
-      <tr>
-        <td className="col parameters-col_name">
-          <div className={required ? "parameter__name required" : "parameter__name"}>
+      <div className="one-peram">
+          <span className={required ? "parameter__name required" : "parameter__name"}>
             { param.get("name") }
             { !required ? null : <span style={{color: "red"}}>&nbsp;*</span> }
-          </div>
-          <div className="parameter__type">{ type } { itemType && `[${itemType}]` }</div>
-          <div className="parameter__deprecated">
+          </span>
+          <span className="parameter__type"> : { type } { itemType && `[${itemType}]` }</span>
+          <span className="parameter__deprecated">
             { isOAS3 && isOAS3() && param.get("deprecated") ? "deprecated": null }
-          </div>
-          <div className="parameter__in">({ param.get("in") })</div>
-        </td>
+          </span>
+          <span className="parameter__in">({ param.get("in") })</span>
 
-        <td className="col parameters-col_description">
           <Markdown source={ param.get("description") }/>
           {(isFormData && !isFormDataSupported) && <div>Error: your browser does not support FormData</div>}
 
@@ -123,7 +120,7 @@ export default class ParameterRow extends Component {
             : <JsonSchemaForm fn={fn}
                               getComponent={getComponent}
                               value={ value }
-                              required={ required }
+                              required={ false }
                               description={param.get("description") ? `${param.get("name")} - ${param.get("description")}` : `${param.get("name")}`}
                               onChange={ this.onChangeWrapper }
                               schema={ isOAS3 && isOAS3() ? param.get("schema") : param }/>
@@ -140,9 +137,7 @@ export default class ParameterRow extends Component {
               : null
           }
 
-        </td>
-
-      </tr>
+      </div>
     )
 
   }

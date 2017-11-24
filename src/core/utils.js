@@ -583,7 +583,6 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
 }
 
 export const getSampleSchema = (schema, contentType="", config={}) => {
-	console.log(schema);
   if (/xml/.test(contentType)) {
     if (!schema.xml || !schema.xml.name) {
       schema.xml = schema.xml || {}
@@ -698,16 +697,23 @@ export const escapeDeepLinkPath = (str) => cssEscape( createDeepLinkPath(str) )
 
 
 
-export const show = (displayClass) => {
+export const show = (key, id) => {
 	var all = document.getElementsByClassName("opblock-show");
 	for (var i = 0; i < all.length; i++) {
 		if(!all[i].classList.contains("opblock-hidden")){
 			all[i].classList.add("opblock-hidden");
 		}
-	}
-	var x = document.getElementsByClassName(displayClass);
-	x[0].classList.remove("opblock-hidden");
+  }
+  var x;
+  if(key=="info" || key=="models"){
+    x = document.getElementsByClassName(key)[0];
+  }else{
+    x = document.getElementById(key.join("-"));
+  }
+  x.classList.remove("opblock-hidden");
+  setSidebarIndex(id);
 }
+
 export const showHide = (displayClass) => {
 	
 	var x = document.getElementsByClassName(displayClass);
@@ -716,4 +722,52 @@ export const showHide = (displayClass) => {
 	}else{
 		x[0].classList.add("opblock-hidden");
 	}
+}
+
+
+export const showHideChild = (tag,id) => {
+  var self = document.getElementsByClassName("parent-"+tag)[0];
+  if(self.classList.contains("sidebar-index-isopen")){
+    var x = self.childNodes;
+    for(var i=0; i<x.length; i++){
+      if(x[i].tagName.toLowerCase() == "a"){
+        x[i].classList.add("opblock-hidden");
+      }
+    }
+    self.classList.remove("sidebar-index-isopen");
+  }else{
+    var x = self.childNodes;
+    for(var i=0; i<x.length; i++){
+      if(x[i].tagName.toLowerCase() == "a"){
+        x[i].classList.remove("opblock-hidden");
+      }
+    }
+    var open = document.getElementsByClassName("sidebar-index-isopen")[0];
+    if(open){
+      var openx = open.childNodes;
+      for(var i=0; i<openx.length; i++){
+        if(openx[i].tagName.toLowerCase() == "a"){
+          openx[i].classList.add("opblock-hidden");
+        }
+      }
+      open.classList.remove("sidebar-index-isopen");
+    }
+    self.classList.add("sidebar-index-isopen");
+  }
+    setSidebarIndex(id);
+}
+
+const setSidebarIndex = (id) =>{
+  var selected = document.getElementsByClassName("sidebar-index")[0];
+  if(selected){
+    selected.classList.remove("sidebar-index");
+  }
+
+  var self= document.getElementById(id);
+  self.classList.add("sidebar-index");
+}
+
+
+export const sidebarLoad = () => {
+  
 }

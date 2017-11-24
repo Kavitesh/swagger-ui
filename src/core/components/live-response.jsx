@@ -71,34 +71,19 @@ export default class LiveResponse extends React.Component {
 
     return (
       <div>
-        { curlRequest && <Curl request={ curlRequest }/> }
-        { url && <div>
-            <h4>Request URL</h4>
-            <div className="request-url">
-              <pre>{url}</pre>
-            </div>
-          </div>
-        }
-        <h4>Server response</h4>
-        <table className="responses-table">
-          <thead>
-          <tr className="responses-header">
-            <td className="col col_header response-col_status">Code</td>
-            <td className="col col_header response-col_description">Details</td>
-          </tr>
-          </thead>
-          <tbody>
-            <tr className="response">
-              <td className="col response-col_status">
-                { status }
+        <h4>Response from server</h4>
+        <div className="responses-table actual-response">
+            <div className="response">
+              <div className="col response-col_status">
+                Status Code : { status }
                 {
-                  notDocumented ? <div className="response-undocumented">
+                  notDocumented ? <span className="response-undocumented">
                                     <i> Undocumented </i>
-                                  </div>
+                                  </span>
                                 : null
                 }
-              </td>
-              <td className="col response-col_description">
+              </div>
+              <div className="col response-col_description">
                 {
                   isError ? <span>
                               {`${response.get("name")}: ${response.get("message")}`}
@@ -119,10 +104,21 @@ export default class LiveResponse extends React.Component {
                 {
                   displayRequestDuration && duration ? <Duration duration={ duration } /> : null
                 }
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+              </div>
+        </div>
+        
+        <h4>Request to server</h4>
+        <div className="actual-request">
+        { curlRequest && <Curl request={ curlRequest }/> }
+        { url && <div>
+            <h4>Request URL</h4>
+            <div className="request-url">
+              <pre>{url}</pre>
+            </div>
+          </div>
+        }
+        </div>
       </div>
     )
   }

@@ -7,28 +7,8 @@
   <title>Swagger UI</title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
-  <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
-  <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
-  <style>
-    html
-    {
-      box-sizing: border-box;
-      overflow: -moz-scrollbars-vertical;
-      overflow-y: scroll;
-    }
-    *,
-    *:before,
-    *:after
-    {
-      box-sizing: inherit;
-    }
-    body {
-      margin:0;
-      background: #fafafa;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="./main.css" >
 </head>
-
 <body>
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0">
@@ -65,10 +45,49 @@
   </defs>
 </svg>
 
-<div id="swagger-ui"></div>
+
+
+		<div class="topnav" id="myTopnav">
+			<a href="#" title="Overview" onclick="setEditorMode(true)"><span>Overview</span></a>
+			<a href="#" title="Reference" onclick="setEditorMode(false)"><span>Reference</span></a>
+		</div>
+		<div id="ui-mode-div">
+			<div id="swagger-ui"></div>
+		</div>
+		<div id="editor-mode-div" class="body-hidden" ><!-- Sidebar -->
+			<div class="overview-sidebar sidelight-grey sidebar-block">
+			  <a href="#" class="sidebar-item sidebutton">Overview</a>
+			  <a href="#" class="sidebar-item sidebutton">Getting Started</a>
+			  <a href="#" class="sidebar-item sidebutton" onclick="setEditorMode(false)"> Rest API</span></a>
+			</div>
+
+			<div style="margin-left:18%">
+			   <div >
+			   <h1>Overview</h1>
+			   <p>Some Overview
+			   </p>
+			   <p> Click <a onclick="setEditorMode(false)">here</span> to see detailed documentation of the api  </p>
+			   </div>
+			</div>
+		</div>
 
 <script src="./swagger-ui-bundle.js"> </script>
 <script src="./swagger-ui-standalone-preset.js"> </script>
+<script>
+function setEditorMode(editorMode) {
+	var uiModeDiv = document.getElementById('ui-mode-div');
+	var editorModeDiv = document.getElementById('editor-mode-div');	
+	if (editorMode){
+		editorModeDiv.classList.remove("body-hidden");
+		uiModeDiv.classList.add("body-hidden");
+	}
+	else{
+		editorModeDiv.classList.add("body-hidden");
+		uiModeDiv.classList.remove("body-hidden");
+	}
+}
+
+</script>
 <script>
   window.onload = function() {
     window["SwaggerUIBundle"] = window["swagger-ui-bundle"]
@@ -77,6 +96,7 @@
     const ui = SwaggerUIBundle({
       url: "http://petstore.swagger.io/v2/swagger.json",
       dom_id: '#swagger-ui',
+      deepLinking: true,
       presets: [
         SwaggerUIBundle.presets.apis,
         SwaggerUIStandalonePreset
@@ -97,6 +117,8 @@
       scopeSeparator: " ",
       additionalQueryStringParams: {}
     })
+
+
   }
 </script>
 </body>

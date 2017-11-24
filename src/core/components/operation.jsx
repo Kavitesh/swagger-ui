@@ -159,24 +159,23 @@ export default class Operation extends PureComponent {
     let onChangeKey = [ path, method ] // Used to add values to _this_ operation ( indexed by path and method )
 
     return (
-        <div className={deprecated ? "opblock opblock-deprecated opblock-hidden opblock-show" : shown ? `opblock opblock-${method} ${operationId} opblock-show opblock-hidden is-open` : `opblock ${operationId} opblock-hidden opblock-show opblock-${method}`} id={isShownKey.join("-") } >
-          <div className={`opblock-summary opblock-summary-${method}`} onClick={this.toggleShown} >
+      <section>
+        <div className={deprecated ? "opblock opblock-deprecated opblock-hidden opblock-show" : shown ? `opblock opblock-${method} opblock-show opblock-hidden is-open` : `opblock opblock-hidden opblock-show opblock-${method}`} id={isShownKey.join("-") } >
+         
+                <div className="opblock-summary">
+                  { summary }
+                </div>
+          <div className={`opblock-summary section-method`} >
               <span className="opblock-summary-method">{method.toUpperCase()}</span>
               <span className={ deprecated ? "opblock-summary-path__deprecated" : "opblock-summary-path" } >
               <a
-                className="nostyle"
-                onClick={isDeepLinkingEnabled ? (e) => e.preventDefault() : null}
-                href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null}>
+                className="nostyle">
                 <span>{path}</span>
               </a>
                 <JumpToPath path={jumpToKey} />
               </span>
 
-            { !showSummary ? null :
-                <div className="opblock-summary-description">
-                  { summary }
-                </div>
-            }
+           
 
             { displayOperationId && operationId ? <span className="opblock-summary-operation-id">{operationId}</span> : null }
 
@@ -187,10 +186,7 @@ export default class Operation extends PureComponent {
                   authSelectors={ authSelectors }/>
             }
           </div>
-
-          <Collapse isOpened={shown}>
-            <div className="opblock-body">
-              { deprecated && <h4 className="opblock-title_normal"> Warning: Deprecated</h4>}
+          { deprecated && <h4 className="opblock-title_normal"> Warning: Deprecated</h4>}
               { description &&
                 <div className="opblock-description-wrapper">
                   <div className="opblock-description">
@@ -210,9 +206,11 @@ export default class Operation extends PureComponent {
                   </div>
                 </div> : null
               }
+            <div className="opblock-body">
+              
 			  
-			<table className="newTable"><tbody><tr>
-			<td width="50%">
+			<div>
+            <section className="section-perameter">
               <Parameters
                 parameters={parameters}
                 operation={operation}
@@ -260,11 +258,11 @@ export default class Operation extends PureComponent {
                     method={ method }/>
               }
             </div>
-			</td>
+            </section>
+            <section className="section-response">
             {this.state.executeInProgress ? <div className="loading-container"><div className="loading"></div></div> : null}
 
               { !responses ? null :
-			<td width="50%">
 				 <Responses
                     responses={ responses }
                     request={ request }
@@ -276,15 +274,19 @@ export default class Operation extends PureComponent {
                     specActions={ specActions }
                     produces={ produces }
                     producesValue={ operation.get("produces_value") }
-                    pathMethod={ [path, method] }
+                    path={ path }
+                    method={ method }
                     displayRequestDuration={ displayRequestDuration }
                     fn={fn} />
-					</td>
               }
-			  </tr></tbody></table>
+  </section>
+			  </div>
+        
             </div>
-          </Collapse>
+
         </div>
+        </section>
+
     )
   }
 

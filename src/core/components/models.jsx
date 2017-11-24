@@ -22,11 +22,8 @@ export default class Models extends Component {
     if (!definitions.size) return null
 
     return <section className={ showModels ? "models is-open opblock-show opblock-hidden"  : "models opblock-show opblock-hidden"}>
-      <h4 onClick={() => layoutActions.show("models", !showModels)}>
+      <h4>
         <span>Models</span>
-        <svg width="20" height="20">
-          <use xlinkHref={showModels ? "#large-arrow-down" : "#large-arrow"} />
-        </svg>
       </h4>
       <Collapse isOpened={showModels}>
         {
