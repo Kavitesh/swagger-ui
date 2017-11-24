@@ -11,7 +11,7 @@ let rules = [
           name: "[name].js"
         }
       },
-      { loader: "babel-loader?retainLines=true" }
+      { loader: "babel-loader" }
     ]
   }
 ]
