@@ -64,14 +64,14 @@ export default class ObjectModel extends Component {
           }
           <span className="inner-object">
             {
-              <table className="model"><tbody>
+              <div className="model model-margin" >
               {
-                !description ? null : <tr style={{ color: "#999", fontStyle: "italic" }}>
-                    <td>description:</td>
-                    <td>
+                !description ? <p/>: <span style={{ color: "#999", fontStyle: "italic" }}>
+                    <span>description:</span>
+                    <span>
                       <Markdown source={ description } />
-                    </td>
-                  </tr>
+                    </span>
+                  </span>
               }
               {
                 !(properties && properties.size) ? null : properties.entrySeq().map(
@@ -83,65 +83,65 @@ export default class ObjectModel extends Component {
                         propertyStyle.fontWeight = "bold"
                       }
 
-                      return (<tr key={key} className={isDeprecated && "deprecated"}>
-                        <td style={ propertyStyle }>
-                          { key }{ isRequired && <span style={{ color: "red" }}>*</span> }
-                        </td>
-                        <td style={{ verticalAlign: "top" }}>
+                      return (<span key={key} className={isDeprecated && "deprecated"}>
+                        <span className={isRequired?"model-field-bold" : "model-field"}>
+                          { key }{ isRequired && <span style={{ color: "red" }}>*</span>  }
+                        </span>
+                        <div className="model-field-type">
                           <Model key={ `object-${name}-${key}_${value}` } { ...otherProps }
                                  required={ isRequired }
                                  getComponent={ getComponent }
                                  schema={ value }
                                  depth={ depth + 1 } />
-                        </td>
-                      </tr>)
+                        </div>
+                      </span>)
                     }).toArray()
               }
               {
                 !additionalProperties || !additionalProperties.size ? null
-                  : <tr>
-                    <td>{ "< * >:" }</td>
-                    <td>
+                  : <span>
+                    <span>{ "< * >:" }</span>
+                    <span>
                       <Model { ...otherProps } required={ false }
                              getComponent={ getComponent }
                              schema={ additionalProperties }
                              depth={ depth + 1 } />
-                    </td>
-                  </tr>
+                    </span>
+                  </span>
               }
               {
                 !anyOf ? null
-                  : <tr>
-                    <td>{ "anyOf ->" }</td>
-                    <td>
+                  : <span>
+                    <span>{ "anyOf ->" }</span>
+                    <span>
                       {anyOf.map((schema, k) => {
                         return <div key={k}><Model { ...otherProps } required={ false }
                                  getComponent={ getComponent }
                                  schema={ schema }
                                  depth={ depth + 1 } /></div>
                       })}
-                    </td>
-                  </tr>
+                    </span>
+                  </span>
               }
               {
                 !oneOf ? null
-                  : <tr>
-                    <td>{ "oneOf ->" }</td>
-                    <td>
+                  : <div>
+                    <div>{ "oneOf ->" }</div>
+                    <div>
                       {oneOf.map((schema, k) => {
                         return <div key={k}><Model { ...otherProps } required={ false }
                                  getComponent={ getComponent }
                                  schema={ schema }
                                  depth={ depth + 1 } /></div>
                       })}
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
               }
               {
                 !not ? null
-                  : <tr>
-                    <td>{ "not ->" }</td>
-                    <td>
+                  : <div>
+                    <div>{ "not ->" }</div>
+                    <div>
                       <div>
                         <Model { ...otherProps }
                                required={ false }
@@ -149,10 +149,10 @@ export default class ObjectModel extends Component {
                                schema={ not }
                                depth={ depth + 1 } />
                         </div>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
               }
-              </tbody></table>
+              </div>
           }
         </span>
         <span className="brace-close">{ braceClose }</span>

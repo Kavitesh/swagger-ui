@@ -10,11 +10,6 @@ const { opId } = helpers
 
 export default class Operations extends React.Component {
 
-    componentDidUpdate(){
-
-      sidebarLoad()
-
-    }
   static propTypes = {
     specSelectors: PropTypes.object.isRequired,
     specActions: PropTypes.object.isRequired,
@@ -116,7 +111,6 @@ export default class Operations extends React.Component {
 		}).toArray()
 		
 		}
-					<div className="sidebar-root-item sidebar-root-item-button"  onClick={show.bind(null,"models","sidebar-models")}  id="sidebar-models">Models</div>
 	</aside>
   <section className="main-section">
 		{ info.count() ? (
@@ -195,8 +189,6 @@ export default class Operations extends React.Component {
 		  
         </div>
 		</section>
-
-    <Models/>
 
     </div>
     

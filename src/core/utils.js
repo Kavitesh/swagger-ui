@@ -771,3 +771,24 @@ const setSidebarIndex = (id) =>{
 export const sidebarLoad = () => {
   
 }
+
+
+function hide(s){
+  s.style.opacity = 1;
+  fade(s.style,s);
+  }
+  
+  function unhide(s){
+    s.style.opacity = 0;
+    unfade(s.style,s);  
+    }
+    
+  
+  function fade(s,e){
+    (s.opacity-=.1)<0?es.classList.add("opblock-hidden"):setTimeout(fade,40)
+  }
+  
+  
+  function unfade(s,e){
+    (s.opacity+=.1)>0?e.classList.remove("opblock-hidden"):setTimeout(unfade,40)
+  }

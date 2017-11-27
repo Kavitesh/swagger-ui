@@ -169,15 +169,6 @@
         }
     }
 
-
-    &.is-open
-    {
-        .opblock-summary
-        {
-            border-bottom: 1px solid #000;
-        }
-    }
-
     .opblock-section-header
     {
         display: flex;
@@ -235,7 +226,7 @@
         background: #000;
         text-shadow: 0 1px 0 rgba(#000,.1);
 
-        @include text_headline(#0025ff);
+        @include text_headline(#b90b67);
     }
 
     .opblock-summary-path,
@@ -305,8 +296,6 @@
         align-items: center;
 
         padding: 5px;
-
-        cursor: pointer;
     }
 
     &.opblock-post
