@@ -65,6 +65,7 @@ export default class Operations extends React.Component {
 
     let filter = layoutSelectors.currentFilter()
 
+    let somethingShown = false;
     if (filter) {
       if (filter !== true) {
         taggedOps = taggedOps.filter((tagObj, tag) => {
@@ -81,15 +82,18 @@ export default class Operations extends React.Component {
       <div>
   
   <aside className='sidebar'>
-					<div className="sidebar-root-item sidebar-root-item-button" onClick={show.bind(null,"info","sidebar-info")} id="sidebar-info">Overview		</div>
+					<a className={layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")])?"sidebar-index sidebar-root-item sidebar-root-item-button":"sidebar-root-item sidebar-root-item-button"}  href={isDeepLinkingEnabled ? `#/info` : null}  onClick={show.bind(null,"info","sidebar-info")} id="sidebar-info">Overview		</a>
 	{
-	
 		taggedOps.map( (tagObj, tag) => {
               let operations = tagObj.get("operations")
               let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
+              let isShownKey = ["operations-tag", createDeepLinkPath(tag)]
+              let showTag = layoutSelectors.isShown(isShownKey)
 			return(
-					<div key={tag} className={"parent-"+ tag + " sidebar-root-item"}>
-          <span className="sidebar-root-item-fold" onClick={showHideChild.bind(null,tag,"sidebar-"+tag)} id={"sidebar-"+tag}>{tag}</span>{
+
+					<div key={tag} className={showTag? "sidebar-index-isopen parent-"+ tag + " sidebar-root-item" : "parent-"+ tag + " sidebar-root-item"}>
+          
+          <a className="sidebar-root-item-fold" href={isDeepLinkingEnabled ? `#/${isShownKey[1]}` : null}  onClick={showHideChild.bind(null,tag,"sidebar-"+tag)}  id={"sidebar-"+tag}>{tag}</a>{
 						operations.map( op => {
 						
 							const path = op.get("path", "")
@@ -98,24 +102,35 @@ export default class Operations extends React.Component {
 							op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
               
               const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
-              
+              let showOp = layoutSelectors.isShown(isShownKey)
+              if(showOp){
+                somethingShown = true;
+              }
               return (
-							<a className="opblock-hidden sidebar-item sidebutton" key={operationId} name={operationId} 
+
+							<a className={showOp ? "sidebar-item sidebutton sidebar-index":"opblock-hidden sidebar-item sidebutton"} key={operationId} name={operationId} 
               href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null,isShownKey,"sidebar-"+isShownKey.join("-"))} id={"sidebar-"+isShownKey.join("-")}>{operationId}</a>
               )
 						}).toArray()
 						}
 						
             </div>
-			)
+      )
+
 		}).toArray()
 		
-		}
+    }
+    
 	</aside>
+
+  
   <section className="main-section">
-		{ info.count() ? (
+   <div className={!somethingShown || layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "info opblock-show opblock opblock-options" : "info opblock-show opblock opblock-options opblock-hidden"}>
+    {
+      info.count() ? (
                   <Info info={ info } url={ url } host={ host } basePath={ basePath } externalDocs={externalDocs} getComponent={getComponent}/>
                 ) : null }
+                </div>
         <div>
           {
             taggedOps.map( (tagObj, tag) => {
@@ -125,13 +140,10 @@ export default class Operations extends React.Component {
               let tagExternalDocsUrl = tagObj.getIn(["tagDetails", "externalDocs", "url"])
 
               let isShownKey = ["operations-tag", createDeepLinkPath(tag)]
-              let showTag = layoutSelectors.isShown(isShownKey, docExpansion === "full" || docExpansion === "list")
 
+              let showTag = layoutSelectors.isShown(isShownKey)
               return (
-                <div className={showTag ? "opblock-tag-section is-open" : "opblock-tag-section"} key={"operation-" + tag}>
-
-
-                  <Collapse isOpened={showTag}>
+                <div className="opblock-tag-section" key={"operation-" + tag}>
                     {
                       operations.map( op => {
 
@@ -178,18 +190,13 @@ export default class Operations extends React.Component {
                         />
                       }).toArray()
                     }
-                  </Collapse>
                 </div>
                 )
             }).toArray()
           }
-
           { taggedOps.size < 1 ? <h3> No operations defined in spec! </h3> : null }
-		  
-		  
         </div>
 		</section>
-
     </div>
     
     )

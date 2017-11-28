@@ -14,7 +14,7 @@ const DEFAULT_REPONSE_KEY = "default"
 
 export const isImmutable = (maybe) => Im.Iterable.isIterable(maybe)
 
-export function isJSONObject (str) {
+export function isJSONObject(str) {
   try {
     var o = JSON.parse(str)
 
@@ -33,26 +33,26 @@ export function isJSONObject (str) {
   return false
 }
 
-export function objectify (thing) {
-  if(!isObject(thing))
+export function objectify(thing) {
+  if (!isObject(thing))
     return {}
-  if(isImmutable(thing))
+  if (isImmutable(thing))
     return thing.toObject()
   return thing
 }
 
-export function arrayify (thing) {
-  if(!thing)
+export function arrayify(thing) {
+  if (!thing)
     return []
 
-  if(thing.toArray)
+  if (thing.toArray)
     return thing.toArray()
 
   return normalizeArray(thing)
 }
 
-export function fromJSOrdered (js) {
-  if(isImmutable(js))
+export function fromJSOrdered(js) {
+  if (isImmutable(js))
     return js // Can't do much here
 
   if (js instanceof win.File)
@@ -65,15 +65,15 @@ export function fromJSOrdered (js) {
 }
 
 export function bindToState(obj, state) {
-	var newObj = {}
-	Object.keys(obj)
-  .filter(key => typeof obj[key] === "function")
-  .forEach(key => newObj[key] = obj[key].bind(null, state))
-	return newObj
+  var newObj = {}
+  Object.keys(obj)
+    .filter(key => typeof obj[key] === "function")
+    .forEach(key => newObj[key] = obj[key].bind(null, state))
+  return newObj
 }
 
 export function normalizeArray(arr) {
-  if(Array.isArray(arr))
+  if (Array.isArray(arr))
     return arr
   return [arr]
 }
@@ -87,7 +87,7 @@ export function isObject(obj) {
 }
 
 export function isFunc(thing) {
-  return typeof(thing) === "function"
+  return typeof (thing) === "function"
 }
 
 export function isArray(thing) {
@@ -107,7 +107,7 @@ export function objMap(obj, fn) {
 export function objReduce(obj, fn) {
   return Object.keys(obj).reduce((newObj, key) => {
     let res = fn(obj[key], key)
-    if(res && typeof res === "object")
+    if (res && typeof res === "object")
       Object.assign(newObj, res)
     return newObj
   }, {})
@@ -127,17 +127,17 @@ export function systemThunkMiddleware(getSystem) {
 }
 
 export const errorLog = getSystem => () => next => action => {
-  try{
-    next( action )
+  try {
+    next(action)
   }
-  catch( e ) {
-    getSystem().errActions.newThrownErr( e, action )
+  catch (e) {
+    getSystem().errActions.newThrownErr(e, action)
   }
 }
 
-export function defaultStatusCode ( responses ) {
+export function defaultStatusCode(responses) {
   let codes = responses.keySeq()
-  return codes.contains(DEFAULT_REPONSE_KEY) ? DEFAULT_REPONSE_KEY : codes.filter( key => (key+"")[0] === "2").sort().first()
+  return codes.contains(DEFAULT_REPONSE_KEY) ? DEFAULT_REPONSE_KEY : codes.filter(key => (key + "")[0] === "2").sort().first()
 }
 
 
@@ -148,7 +148,7 @@ export function defaultStatusCode ( responses ) {
  * @returns {Immutable.List} either iterable.get(keys) or an empty Immutable.List
  */
 export function getList(iterable, keys) {
-  if(!Im.Iterable.isIterable(iterable)) {
+  if (!Im.Iterable.isIterable(iterable)) {
     return Im.List()
   }
   let val = iterable.getIn(Array.isArray(keys) ? keys : [keys])
@@ -159,7 +159,7 @@ export function getList(iterable, keys) {
  * Adapted from http://github.com/asvd/microlight
  * @copyright 2016 asvd <heliosframework@gmail.com>
  */
-export function highlight (el) {
+export function highlight(el) {
   const MAX_LENGTH = 5000
   var
     _document = document,
@@ -169,7 +169,7 @@ export function highlight (el) {
   if (!el) return ""
   if (el.textContent.length > MAX_LENGTH) { return el.textContent }
 
-  var reset = function(el) {
+  var reset = function (el) {
     var text = el.textContent,
       pos = 0, // current position
       next1 = text[0], // next character
@@ -179,23 +179,23 @@ export function highlight (el) {
       token = // current token content
         el.innerHTML = "", // (and cleaning the node)
 
-    // current token type:
-    //  0: anything else (whitespaces / newlines)
-    //  1: operator or brace
-    //  2: closing braces (after which '/' is division not regex)
-    //  3: (key)word
-    //  4: regex
-    //  5: string starting with "
-    //  6: string starting with '
-    //  7: xml comment  <!-- -->
-    //  8: multiline comment /* */
-    //  9: single-line comment starting with two slashes //
-    // 10: single-line comment starting with hash #
+      // current token type:
+      //  0: anything else (whitespaces / newlines)
+      //  1: operator or brace
+      //  2: closing braces (after which '/' is division not regex)
+      //  3: (key)word
+      //  4: regex
+      //  5: string starting with "
+      //  6: string starting with '
+      //  7: xml comment  <!-- -->
+      //  8: multiline comment /* */
+      //  9: single-line comment starting with two slashes //
+      // 10: single-line comment starting with hash #
       tokenType = 0,
 
-    // kept to determine between regex and division
+      // kept to determine between regex and division
       lastTokenType,
-    // flag determining if token is multi-character
+      // flag determining if token is multi-character
       multichar,
       node
 
@@ -205,15 +205,15 @@ export function highlight (el) {
       // pervious character will not be therefore
       // recognized as a token finalize condition
       prev1 = tokenType < 7 && prev1 == "\\" ? 1 : chr
-      ) {
+    ) {
       chr = next1
-      next1=text[++pos]
+      next1 = text[++pos]
       multichar = token.length > 1
 
       // checking if current token should be finalized
       if (!chr || // end of content
-          // types 9-10 (single-line comments) end with a
-          // newline
+        // types 9-10 (single-line comments) end with a
+        // newline
         (tokenType > 8 && chr == "\n") ||
         [ // finalize conditions for other token types
           // 0: whitespaces
@@ -231,9 +231,9 @@ export function highlight (el) {
           // 6: string with '
           prev1 == "'" && multichar,
           // 7: xml comment
-          text[pos-4]+prev2+prev1 == "-->",
+          text[pos - 4] + prev2 + prev1 == "-->",
           // 8: multiline comment
-          prev2+prev1 == "*/"
+          prev2 + prev1 == "*/"
         ][tokenType]
       ) {
         // appending the token to the result
@@ -254,18 +254,18 @@ export function highlight (el) {
             // 4: comments
             ""
           ][
-            // not formatted
-            !tokenType ? 0 :
-              // punctuation
-              tokenType < 3 ? 2 :
-                // comments
-                tokenType > 6 ? 4 :
-                  // regex and strings
-                  tokenType > 3 ? 3 :
-                    // otherwise tokenType == 3, (key)word
-                    // (1 if regexp matches, 0 otherwise)
-                    + /^(a(bstract|lias|nd|rguments|rray|s(m|sert)?|uto)|b(ase|egin|ool(ean)?|reak|yte)|c(ase|atch|har|hecked|lass|lone|ompl|onst|ontinue)|de(bugger|cimal|clare|f(ault|er)?|init|l(egate|ete)?)|do|double|e(cho|ls?if|lse(if)?|nd|nsure|num|vent|x(cept|ec|p(licit|ort)|te(nds|nsion|rn)))|f(allthrough|alse|inal(ly)?|ixed|loat|or(each)?|riend|rom|unc(tion)?)|global|goto|guard|i(f|mp(lements|licit|ort)|n(it|clude(_once)?|line|out|stanceof|t(erface|ernal)?)?|s)|l(ambda|et|ock|ong)|m(icrolight|odule|utable)|NaN|n(amespace|ative|ext|ew|il|ot|ull)|o(bject|perator|r|ut|verride)|p(ackage|arams|rivate|rotected|rotocol|ublic)|r(aise|e(adonly|do|f|gister|peat|quire(_once)?|scue|strict|try|turn))|s(byte|ealed|elf|hort|igned|izeof|tatic|tring|truct|ubscript|uper|ynchronized|witch)|t(emplate|hen|his|hrows?|ransient|rue|ry|ype(alias|def|id|name|of))|u(n(checked|def(ined)?|ion|less|signed|til)|se|sing)|v(ar|irtual|oid|olatile)|w(char_t|hen|here|hile|ith)|xor|yield)$/[test](token)
-            ])
+          // not formatted
+          !tokenType ? 0 :
+            // punctuation
+            tokenType < 3 ? 2 :
+              // comments
+              tokenType > 6 ? 4 :
+                // regex and strings
+                tokenType > 3 ? 3 :
+                  // otherwise tokenType == 3, (key)word
+                  // (1 if regexp matches, 0 otherwise)
+                  + /^(a(bstract|lias|nd|rguments|rray|s(m|sert)?|uto)|b(ase|egin|ool(ean)?|reak|yte)|c(ase|atch|har|hecked|lass|lone|ompl|onst|ontinue)|de(bugger|cimal|clare|f(ault|er)?|init|l(egate|ete)?)|do|double|e(cho|ls?if|lse(if)?|nd|nsure|num|vent|x(cept|ec|p(licit|ort)|te(nds|nsion|rn)))|f(allthrough|alse|inal(ly)?|ixed|loat|or(each)?|riend|rom|unc(tion)?)|global|goto|guard|i(f|mp(lements|licit|ort)|n(it|clude(_once)?|line|out|stanceof|t(erface|ernal)?)?|s)|l(ambda|et|ock|ong)|m(icrolight|odule|utable)|NaN|n(amespace|ative|ext|ew|il|ot|ull)|o(bject|perator|r|ut|verride)|p(ackage|arams|rivate|rotected|rotocol|ublic)|r(aise|e(adonly|do|f|gister|peat|quire(_once)?|scue|strict|try|turn))|s(byte|ealed|elf|hort|igned|izeof|tatic|tring|truct|ubscript|uper|ynchronized|witch)|t(emplate|hen|his|hrows?|ransient|rue|ry|ype(alias|def|id|name|of))|u(n(checked|def(ined)?|ion|less|signed|til)|se|sing)|v(ar|irtual|oid|olatile)|w(char_t|hen|here|hile|ith)|xor|yield)$/[test](token)
+          ])
 
           node[appendChild](_document.createTextNode(token))
         }
@@ -285,25 +285,25 @@ export function highlight (el) {
         tokenType = 11
         while (![
           1, //  0: whitespace
-                               //  1: operator or braces
+          //  1: operator or braces
           /[\/{}[(\-+*=<>:;|\\.,?!&@~]/[test](chr), // eslint-disable-line no-useless-escape
           /[\])]/[test](chr), //  2: closing brace
           /[$\w]/[test](chr), //  3: (key)word
           chr == "/" && //  4: regex
-            // previous token was an
-            // opening brace or an
-            // operator (otherwise
-            // division, not a regex)
+          // previous token was an
+          // opening brace or an
+          // operator (otherwise
+          // division, not a regex)
           (lastTokenType < 2) &&
-            // workaround for xml
-            // closing tags
+          // workaround for xml
+          // closing tags
           prev1 != "<",
           chr == "\"", //  5: string with "
           chr == "'", //  6: string with '
-                               //  7: xml comment
-          chr+next1+text[pos+1]+text[pos+2] == "<!--",
-          chr+next1 == "/*", //  8: multiline comment
-          chr+next1 == "//", //  9: single-line comment
+          //  7: xml comment
+          chr + next1 + text[pos + 1] + text[pos + 2] == "<!--",
+          chr + next1 == "/*", //  8: multiline comment
+          chr + next1 == "//", //  9: single-line comment
           chr == "#" // 10: hash-style comment
         ][--tokenType]);
       }
@@ -322,26 +322,26 @@ export function highlight (el) {
  * @param {String} key the key to use, when merging the `key`
  * @returns {Immutable.List}
  */
-export function mapToList(map, keyNames="key", collectedKeys=Im.Map()) {
-  if(!Im.Map.isMap(map) || !map.size) {
+export function mapToList(map, keyNames = "key", collectedKeys = Im.Map()) {
+  if (!Im.Map.isMap(map) || !map.size) {
     return Im.List()
   }
 
-  if(!Array.isArray(keyNames)) {
-    keyNames = [ keyNames ]
+  if (!Array.isArray(keyNames)) {
+    keyNames = [keyNames]
   }
 
-  if(keyNames.length < 1) {
+  if (keyNames.length < 1) {
     return map.merge(collectedKeys)
   }
 
   // I need to avoid `flatMap` from merging in the Maps, as well as the lists
   let list = Im.List()
   let keyName = keyNames[0]
-  for(let entry of map.entries()) {
+  for (let entry of map.entries()) {
     let [key, val] = entry
     let nextList = mapToList(val, keyNames.slice(1), collectedKeys.set(keyName, key))
-    if(Im.List.isList(nextList)) {
+    if (Im.List.isList(nextList)) {
       list = list.concat(nextList)
     } else {
       list = list.push(nextList)
@@ -366,103 +366,103 @@ export function pascalCaseFilename(filename) {
 // - If immutable, use .is()
 // - if in explicit objectList, then compare using _.eq
 // - else use ===
-export const propChecker = (props, nextProps, objectList=[], ignoreList=[]) => {
+export const propChecker = (props, nextProps, objectList = [], ignoreList = []) => {
 
-  if(Object.keys(props).length !== Object.keys(nextProps).length) {
+  if (Object.keys(props).length !== Object.keys(nextProps).length) {
     return true
   }
 
   return (
     some(props, (a, name) => {
-      if(ignoreList.includes(name)) {
+      if (ignoreList.includes(name)) {
         return false
       }
       let b = nextProps[name]
 
-      if(Im.Iterable.isIterable(a)) {
-        return !Im.is(a,b)
+      if (Im.Iterable.isIterable(a)) {
+        return !Im.is(a, b)
       }
 
       // Not going to compare objects
-      if(typeof a === "object" && typeof b === "object") {
+      if (typeof a === "object" && typeof b === "object") {
         return false
       }
 
       return a !== b
     })
-    || objectList.some( objectPropName => !eq(props[objectPropName], nextProps[objectPropName])))
+    || objectList.some(objectPropName => !eq(props[objectPropName], nextProps[objectPropName])))
 }
 
-export const validateMaximum = ( val, max ) => {
+export const validateMaximum = (val, max) => {
   if (val > max) {
     return "Value must be less than Maximum"
   }
 }
 
-export const validateMinimum = ( val, min ) => {
+export const validateMinimum = (val, min) => {
   if (val < min) {
     return "Value must be greater than Minimum"
   }
 }
 
-export const validateNumber = ( val ) => {
+export const validateNumber = (val) => {
   if (!/^-?\d+(\.?\d+)?$/.test(val)) {
     return "Value must be a number"
   }
 }
 
-export const validateInteger = ( val ) => {
+export const validateInteger = (val) => {
   if (!/^-?\d+$/.test(val)) {
     return "Value must be an integer"
   }
 }
 
-export const validateFile = ( val ) => {
-  if ( val && !(val instanceof win.File) ) {
+export const validateFile = (val) => {
+  if (val && !(val instanceof win.File)) {
     return "Value must be a file"
   }
 }
 
-export const validateBoolean = ( val ) => {
-  if ( !(val === "true" || val === "false" || val === true || val === false) ) {
+export const validateBoolean = (val) => {
+  if (!(val === "true" || val === "false" || val === true || val === false)) {
     return "Value must be a boolean"
   }
 }
 
-export const validateString = ( val ) => {
-  if ( val && typeof val !== "string" ) {
+export const validateString = (val) => {
+  if (val && typeof val !== "string") {
     return "Value must be a string"
   }
 }
 
 export const validateDateTime = (val) => {
-    if (isNaN(Date.parse(val))) {
-        return "Value must be a DateTime"
-    }
+  if (isNaN(Date.parse(val))) {
+    return "Value must be a DateTime"
+  }
 }
 
 export const validateGuid = (val) => {
-    if (!/^[{(]?[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}[)}]?$/.test(val)) {
-        return "Value must be a Guid"
-    }
+  if (!/^[{(]?[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}[)}]?$/.test(val)) {
+    return "Value must be a Guid"
+  }
 }
 
 export const validateMaxLength = (val, max) => {
   if (val.length > max) {
-      return "Value must be less than MaxLength"
+    return "Value must be less than MaxLength"
   }
 }
 
 export const validateMinLength = (val, min) => {
   if (val.length < min) {
-      return "Value must be greater than MinLength"
+    return "Value must be greater than MinLength"
   }
 }
 
 export const validatePattern = (val, rxPattern) => {
   var patt = new RegExp(rxPattern)
   if (!patt.test(val)) {
-      return "Value must follow pattern " + rxPattern
+    return "Value must follow pattern " + rxPattern
   }
 }
 
@@ -480,14 +480,14 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
   let maxLength = paramDetails.get("maxLength")
   let minLength = paramDetails.get("minLength")
   let pattern = paramDetails.get("pattern")
-  
+
 
   /*
     If the parameter is required OR the parameter has a value (meaning optional, but filled in)
     then we should do our validation routine.
     Only bother validating the parameter if the type was specified.
   */
-  if ( type && (required || value) ) {
+  if (type && (required || value)) {
     // These checks should evaluate to true if there is a parameter
     let stringCheck = type === "string" && value
     let arrayCheck = type === "array" && Array.isArray(value) && value.length
@@ -497,7 +497,7 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
     let numberCheck = type === "number" && (value || value === 0)
     let integerCheck = type === "integer" && (value || value === 0)
 
-    if ( required && !(stringCheck || arrayCheck || listCheck || fileCheck || booleanCheck || numberCheck || integerCheck) ) {
+    if (required && !(stringCheck || arrayCheck || listCheck || fileCheck || booleanCheck || numberCheck || integerCheck)) {
       errors.push("Required field is not provided")
       return errors
     }
@@ -506,7 +506,7 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
       let err = validatePattern(value, pattern)
       if (err) errors.push(err)
     }
-    
+
     if (maxLength || maxLength === 0) {
       let err = validateMaxLength(value, maxLength)
       if (err) errors.push(err)
@@ -527,33 +527,33 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
       if (err) errors.push(err)
     }
 
-    if ( type === "string" ) {
+    if (type === "string") {
       let err
       if (format === "date-time") {
-          err = validateDateTime(value)
+        err = validateDateTime(value)
       } else if (format === "uuid") {
-          err = validateGuid(value)
+        err = validateGuid(value)
       } else {
-          err = validateString(value)
+        err = validateString(value)
       }
       if (!err) return errors
       errors.push(err)
-    } else if ( type === "boolean" ) {
+    } else if (type === "boolean") {
       let err = validateBoolean(value)
       if (!err) return errors
       errors.push(err)
-    } else if ( type === "number" ) {
+    } else if (type === "number") {
       let err = validateNumber(value)
       if (!err) return errors
       errors.push(err)
-    } else if ( type === "integer" ) {
+    } else if (type === "integer") {
       let err = validateInteger(value)
       if (!err) return errors
       errors.push(err)
-    } else if ( type === "array" ) {
+    } else if (type === "array") {
       let itemType
 
-      if ( !value.count() ) { return errors }
+      if (!value.count()) { return errors }
 
       itemType = paramDetails.getIn(["items", "type"])
 
@@ -568,11 +568,11 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
           err = validateString(item)
         }
 
-        if ( err ) {
-          errors.push({ index: index, error: err})
+        if (err) {
+          errors.push({ index: index, error: err })
         }
       })
-    } else if ( type === "file" ) {
+    } else if (type === "file") {
       let err = validateFile(value)
       if (!err) return errors
       errors.push(err)
@@ -582,7 +582,7 @@ export const validateParam = (param, isXml, isOAS3 = false) => {
   return errors
 }
 
-export const getSampleSchema = (schema, contentType="", config={}) => {
+export const getSampleSchema = (schema, contentType = "", config = {}) => {
   if (/xml/.test(contentType)) {
     if (!schema.xml || !schema.xml.name) {
       schema.xml = schema.xml || {}
@@ -598,8 +598,9 @@ export const getSampleSchema = (schema, contentType="", config={}) => {
     }
     return memoizedCreateXMLExample(schema, config)
   }
-  if(schema.xml){
-	return "{ \"" + schema.xml.name +"\": "+JSON.stringify(memoizedSampleFromSchema(schema, config), null, 3)+"\n}"
+  console.log(schema)
+  if (schema.json) {
+    return "{ \"" + schema.json.name + "\": " + JSON.stringify(memoizedSampleFromSchema(schema, config), null, 3) + "\n}"
   }
   return JSON.stringify(memoizedSampleFromSchema(schema, config), null, 2)
 }
@@ -608,7 +609,7 @@ export const parseSearch = () => {
   let map = {}
   let search = window.location.search
 
-  if ( search != "" ) {
+  if (search != "") {
     let params = search.substr(1).split("&")
 
     for (let i in params) {
@@ -648,21 +649,21 @@ export const buildFormData = (data) => {
   for (let name in data) {
     let val = data[name]
     if (val !== undefined && val !== "") {
-      formArr.push([name, "=", encodeURIComponent(val).replace(/%20/g,"+")].join(""))
+      formArr.push([name, "=", encodeURIComponent(val).replace(/%20/g, "+")].join(""))
     }
   }
   return formArr.join("&")
 }
 
 // Is this really required as a helper? Perhaps. TODO: expose the system of presets.apis in docs, so we know what is supported
-export const shallowEqualKeys = (a,b, keys) => {
+export const shallowEqualKeys = (a, b, keys) => {
   return !!find(keys, (key) => {
     return eq(a[key], b[key])
   })
 }
 
 export function sanitizeUrl(url) {
-  if(typeof url !== "string" || url === "") {
+  if (typeof url !== "string" || url === "") {
     return ""
   }
 
@@ -670,12 +671,12 @@ export function sanitizeUrl(url) {
 }
 
 export function getAcceptControllingResponse(responses) {
-  if(!Im.OrderedMap.isOrderedMap(responses)) {
+  if (!Im.OrderedMap.isOrderedMap(responses)) {
     // wrong type!
     return null
   }
 
-  if(!responses.size) {
+  if (!responses.size) {
     // responses is empty
     return null
   }
@@ -693,21 +694,21 @@ export function getAcceptControllingResponse(responses) {
 }
 
 export const createDeepLinkPath = (str) => typeof str == "string" || str instanceof String ? str.trim().replace(/\s/g, "_") : ""
-export const escapeDeepLinkPath = (str) => cssEscape( createDeepLinkPath(str) )
+export const escapeDeepLinkPath = (str) => cssEscape(createDeepLinkPath(str))
 
 
 
 export const show = (key, id) => {
-	var all = document.getElementsByClassName("opblock-show");
-	for (var i = 0; i < all.length; i++) {
-		if(!all[i].classList.contains("opblock-hidden")){
-			all[i].classList.add("opblock-hidden");
-		}
+  var all = document.getElementsByClassName("opblock-show");
+  for (var i = 0; i < all.length; i++) {
+    if (!all[i].classList.contains("opblock-hidden")) {
+      all[i].classList.add("opblock-hidden");
+    }
   }
   var x;
-  if(key=="info" || key=="models"){
+  if (key == "info" || key == "models") {
     x = document.getElementsByClassName(key)[0];
-  }else{
+  } else {
     x = document.getElementById(key.join("-"));
   }
   x.classList.remove("opblock-hidden");
@@ -715,80 +716,80 @@ export const show = (key, id) => {
 }
 
 export const showHide = (displayClass) => {
-	
-	var x = document.getElementsByClassName(displayClass);
-	if(x[0].classList.contains("opblock-hidden")){
-		x[0].classList.remove("opblock-hidden");
-	}else{
-		x[0].classList.add("opblock-hidden");
-	}
+
+  var x = document.getElementsByClassName(displayClass);
+  if (x[0].classList.contains("opblock-hidden")) {
+    x[0].classList.remove("opblock-hidden");
+  } else {
+    x[0].classList.add("opblock-hidden");
+  }
 }
 
 
-export const showHideChild = (tag,id) => {
-  var self = document.getElementsByClassName("parent-"+tag)[0];
-  if(self.classList.contains("sidebar-index-isopen")){
+export const showHideChild = (tag, id) => {
+  console.log("debud")
+  var self = document.getElementsByClassName("parent-" + tag)[0];
+  if (self.classList.contains("sidebar-index-isopen")) {
     var x = self.childNodes;
-    for(var i=0; i<x.length; i++){
-      if(x[i].tagName.toLowerCase() == "a"){
-        x[i].classList.add("opblock-hidden");
-      }
-    }
+    // for (var i = 0; i < x.length; i++) {
+    //   if (x[i].tagName.toLowerCase() == "a") {
+    //     x[i].classList.add("opblock-hidden");
+    //   }
+    // }
     self.classList.remove("sidebar-index-isopen");
-  }else{
-    var x = self.childNodes;
-    for(var i=0; i<x.length; i++){
-      if(x[i].tagName.toLowerCase() == "a"){
-        x[i].classList.remove("opblock-hidden");
-      }
-    }
+  } else {
+    // var x = self.childNodes;
+    // for (var i = 0; i < x.length; i++) {
+    //   if (x[i].tagName.toLowerCase() == "a") {
+    //     x[i].classList.remove("opblock-hidden");
+    //   }
+    // }
     var open = document.getElementsByClassName("sidebar-index-isopen")[0];
-    if(open){
-      var openx = open.childNodes;
-      for(var i=0; i<openx.length; i++){
-        if(openx[i].tagName.toLowerCase() == "a"){
-          openx[i].classList.add("opblock-hidden");
-        }
-      }
+    if (open) {
+      // var openx = open.childNodes;
+      // for (var i = 0; i < openx.length; i++) {
+      //   if (openx[i].tagName.toLowerCase() == "a") {
+      //     openx[i].classList.add("opblock-hidden");
+      //   }
+      // }
       open.classList.remove("sidebar-index-isopen");
     }
     self.classList.add("sidebar-index-isopen");
   }
-    setSidebarIndex(id);
 }
 
-const setSidebarIndex = (id) =>{
+const setSidebarIndex = (id) => {
   var selected = document.getElementsByClassName("sidebar-index")[0];
-  if(selected){
+  if (selected) {
     selected.classList.remove("sidebar-index");
   }
 
-  var self= document.getElementById(id);
+  var self = document.getElementById(id);
   self.classList.add("sidebar-index");
 }
 
 
 export const sidebarLoad = () => {
-  
+
 }
 
 
-function hide(s){
+function hide(s) {
   s.style.opacity = 1;
-  fade(s.style,s);
-  }
-  
-  function unhide(s){
-    s.style.opacity = 0;
-    unfade(s.style,s);  
-    }
-    
-  
-  function fade(s,e){
-    (s.opacity-=.1)<0?es.classList.add("opblock-hidden"):setTimeout(fade,40)
-  }
-  
-  
-  function unfade(s,e){
-    (s.opacity+=.1)>0?e.classList.remove("opblock-hidden"):setTimeout(unfade,40)
-  }
+  fade(s.style, s);
+}
+
+function unhide(s) {
+  s.style.opacity = 0;
+  unfade(s.style, s);
+}
+
+
+function fade(s, e) {
+  (s.opacity -= .1) < 0 ? es.classList.add("opblock-hidden") : setTimeout(fade, 40)
+}
+
+
+function unfade(s, e) {
+  (s.opacity += .1) > 0 ? e.classList.remove("opblock-hidden") : setTimeout(unfade, 40)
+}

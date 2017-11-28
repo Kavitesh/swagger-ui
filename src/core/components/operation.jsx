@@ -58,7 +58,7 @@ export default class Operation extends PureComponent {
     let consumes = operation.get("consumes")
     let consumesValue = operation.get("consumes_value")
 
-    if(nextProps.response !== this.props.response) {
+    if (nextProps.response !== this.props.response) {
       this.setState({ executeInProgress: false })
     }
 
@@ -73,25 +73,25 @@ export default class Operation extends PureComponent {
     }
   }
 
-  toggleShown =() => {
+  toggleShown = () => {
     let { layoutActions, isShownKey } = this.props
     layoutActions.show(isShownKey, !this.isShown())
   }
 
-  isShown =() => {
+  isShown = () => {
     let { layoutSelectors, isShownKey, getConfigs } = this.props
     let { docExpansion } = getConfigs()
 
-    return layoutSelectors.isShown(isShownKey, docExpansion === "full" ) // Here is where we set the default
+    return layoutSelectors.isShown(isShownKey, docExpansion === "full") // Here is where we set the default
   }
 
-  onTryoutClick =() => {
-    this.setState({tryItOutEnabled: !this.state.tryItOutEnabled})
+  onTryoutClick = () => {
+    this.setState({ tryItOutEnabled: !this.state.tryItOutEnabled })
   }
 
-  onCancelClick =() => {
+  onCancelClick = () => {
     let { specActions, path, method } = this.props
-    this.setState({tryItOutEnabled: !this.state.tryItOutEnabled})
+    this.setState({ tryItOutEnabled: !this.state.tryItOutEnabled })
     specActions.clearValidateParams([path, method])
   }
 
@@ -135,157 +135,156 @@ export default class Operation extends PureComponent {
     let operationScheme = specSelectors.operationScheme(path, method)
 
     const Responses = getComponent("responses")
-    const Parameters = getComponent( "parameters" )
-    const Execute = getComponent( "execute" )
-    const Clear = getComponent( "clear" )
-    const AuthorizeOperationBtn = getComponent( "authorizeOperationBtn" )
+    const Parameters = getComponent("parameters")
+    const Execute = getComponent("execute")
+    const Clear = getComponent("clear")
+    const AuthorizeOperationBtn = getComponent("authorizeOperationBtn")
     const JumpToPath = getComponent("JumpToPath", true)
-    const Collapse = getComponent( "Collapse" )
-    const Markdown = getComponent( "Markdown" )
-    const Schemes = getComponent( "schemes" )
+    const Collapse = getComponent("Collapse")
+    const Markdown = getComponent("Markdown")
+    const Schemes = getComponent("schemes")
 
     const { deepLinking } = getConfigs()
 
     const isDeepLinkingEnabled = deepLinking && deepLinking !== "false"
 
     // Merge in Live Response
-    if(responses && response && response.size > 0) {
+    if (responses && response && response.size > 0) {
       let notDocumented = !responses.get(String(response.get("status")))
       response = response.set("notDocumented", notDocumented)
     }
 
     let { tryItOutEnabled } = this.state
-    let shown = true//this.isShown()
-    let onChangeKey = [ path, method ] // Used to add values to _this_ operation ( indexed by path and method )
-
+    let shown = this.isShown()
+    let onChangeKey = [path, method] // Used to add values to _this_ operation ( indexed by path and method )
     return (
       <section>
-        <div className={deprecated ? "opblock opblock-deprecated opblock-hidden opblock-show" : shown ? `opblock opblock-${method} opblock-show opblock-hidden is-open` : `opblock opblock-hidden opblock-show opblock-${method}`} id={isShownKey.join("-") } >
-         
-                <div className="opblock-summary">
-                  { summary }
-                </div>
+        <div className={deprecated ? "opblock opblock-deprecated opblock-hidden opblock-show" : shown ? `opblock opblock-${method} opblock-show ` : `opblock opblock-hidden opblock-show opblock-${method}`} id={isShownKey.join("-")} >
+
+          <div className="opblock-summary">
+            {summary}
+          </div>
           <div className={`opblock-summary section-method`} >
-              <span className="opblock-summary-method">{method.toUpperCase()}</span>
-              <span className={ deprecated ? "opblock-summary-path__deprecated" : "opblock-summary-path" } >
-              <a
+            <span className="opblock-summary-method">{method.toUpperCase()}</span>
+            <span className={deprecated ? "opblock-summary-path__deprecated" : "opblock-summary-path"} >
+              <div
                 className="nostyle">
                 <span>{path}</span>
-              </a>
-                <JumpToPath path={jumpToKey} />
-              </span>
+              </div>
+              <JumpToPath path={jumpToKey} />
+            </span>
 
-           
 
-            { displayOperationId && operationId ? <span className="opblock-summary-operation-id">{operationId}</span> : null }
+
+            {displayOperationId && operationId ? <span className="opblock-summary-operation-id">{operationId}</span> : null}
 
             {
               (!security || !security.count()) ? null :
-                <AuthorizeOperationBtn authActions={ authActions }
-                  security={ security }
-                  authSelectors={ authSelectors }/>
+                <AuthorizeOperationBtn authActions={authActions}
+                  security={security}
+                  authSelectors={authSelectors} />
             }
           </div>
-          { deprecated && <h4 className="opblock-title_normal"> Warning: Deprecated</h4>}
-              { description &&
-                <div className="opblock-description-wrapper">
-                  <div className="opblock-description">
-                    <Markdown source={ description } />
-                  </div>
+          {deprecated && <h4 className="opblock-title_normal"> Warning: Deprecated</h4>}
+          {description &&
+            <div className="opblock-description-wrapper">
+              <div className="opblock-description">
+                <Markdown source={description} />
+              </div>
+            </div>
+          }
+          {
+            externalDocs && externalDocs.get("url") ?
+              <div className="opblock-external-docs-wrapper">
+                <h4 className="opblock-title_normal">Find more details</h4>
+                <div className="opblock-external-docs">
+                  <span className="opblock-external-docs__description">
+                    <Markdown source={externalDocs.get("description")} />
+                  </span>
+                  <a className="opblock-external-docs__link" href={externalDocs.get("url")}>{externalDocs.get("url")}</a>
                 </div>
-              }
-              {
-                externalDocs && externalDocs.get("url") ?
-                <div className="opblock-external-docs-wrapper">
-                  <h4 className="opblock-title_normal">Find more details</h4>
-                  <div className="opblock-external-docs">
-                    <span className="opblock-external-docs__description">
-                      <Markdown source={ externalDocs.get("description") } />
-                    </span>
-                    <a className="opblock-external-docs__link" href={ externalDocs.get("url") }>{ externalDocs.get("url") }</a>
-                  </div>
+              </div> : null
+          }
+          <div className="opblock-body">
+
+
+            <div>
+              <section className="section-perameter">
+                <Parameters
+                  parameters={parameters}
+                  operation={operation}
+                  onChangeKey={onChangeKey}
+                  onTryoutClick={this.onTryoutClick}
+                  onCancelClick={this.onCancelClick}
+                  tryItOutEnabled={tryItOutEnabled}
+                  allowTryItOut={allowTryItOut}
+
+                  fn={fn}
+                  getComponent={getComponent}
+                  specActions={specActions}
+                  specSelectors={specSelectors}
+                  pathMethod={[path, method]}
+                  getConfigs={getConfigs}
+                />
+
+                {!tryItOutEnabled || !allowTryItOut ? null : schemes && schemes.size ? <div className="opblock-schemes">
+                  <Schemes schemes={schemes}
+                    path={path}
+                    method={method}
+                    specActions={specActions}
+                    currentScheme={operationScheme} />
                 </div> : null
-              }
-            <div className="opblock-body">
-              
-			  
-			<div>
-            <section className="section-perameter">
-              <Parameters
-                parameters={parameters}
-                operation={operation}
-                onChangeKey={onChangeKey}
-                onTryoutClick = { this.onTryoutClick }
-                onCancelClick = { this.onCancelClick }
-                tryItOutEnabled = { tryItOutEnabled }
-                allowTryItOut={allowTryItOut}
+                }
 
-                fn={fn}
-                getComponent={ getComponent }
-                specActions={ specActions }
-                specSelectors={ specSelectors }
-                pathMethod={ [path, method] }
-                getConfigs={ getConfigs }
-              />
+                <div className={(!tryItOutEnabled || !response || !allowTryItOut) ? "execute-wrapper" : "btn-group"}>
+                  {!tryItOutEnabled || !allowTryItOut ? null :
 
-              {!tryItOutEnabled || !allowTryItOut ? null : schemes && schemes.size ? <div className="opblock-schemes">
-                    <Schemes schemes={ schemes }
-                             path={ path }
-                             method={ method }
-                             specActions={ specActions }
-                             currentScheme={ operationScheme } />
-                  </div> : null
-              }
+                    <Execute
+                      getComponent={getComponent}
+                      operation={operation}
+                      specActions={specActions}
+                      specSelectors={specSelectors}
+                      path={path}
+                      method={method}
+                      onExecute={this.onExecute} />
+                  }
 
-            <div className={(!tryItOutEnabled || !response || !allowTryItOut) ? "execute-wrapper" : "btn-group"}>
-              { !tryItOutEnabled || !allowTryItOut ? null :
+                  {(!tryItOutEnabled || !response || !allowTryItOut) ? null :
+                    <Clear
+                      onClick={this.onClearClick}
+                      specActions={specActions}
+                      path={path}
+                      method={method} />
+                  }
+                </div>
+              </section>
+              <section className="section-response">
+                {this.state.executeInProgress ? <div className="loading-container"><div className="loading"></div></div> : null}
 
-                  <Execute
+                {!responses ? null :
+                  <Responses
+                    responses={responses}
+                    request={request}
+                    tryItOutResponse={response}
                     getComponent={getComponent}
-                    operation={ operation }
-                    specActions={ specActions }
-                    specSelectors={ specSelectors }
-                    path={ path }
-                    method={ method }
-                    onExecute={ this.onExecute } />
-              }
-
-              { (!tryItOutEnabled || !response || !allowTryItOut) ? null :
-                  <Clear
-                    onClick={ this.onClearClick }
-                    specActions={ specActions }
-                    path={ path }
-                    method={ method }/>
-              }
-            </div>
-            </section>
-            <section className="section-response">
-            {this.state.executeInProgress ? <div className="loading-container"><div className="loading"></div></div> : null}
-
-              { !responses ? null :
-				 <Responses
-                    responses={ responses }
-                    request={ request }
-                    tryItOutResponse={ response }
-                    getComponent={ getComponent }
-                    getConfigs={ getConfigs }
-                    specSelectors={ specSelectors }
+                    getConfigs={getConfigs}
+                    specSelectors={specSelectors}
                     oas3Actions={oas3Actions}
-                    specActions={ specActions }
-                    produces={ produces }
-                    producesValue={ operation.get("produces_value") }
-                    path={ path }
-                    method={ method }
-                    displayRequestDuration={ displayRequestDuration }
+                    specActions={specActions}
+                    produces={produces}
+                    producesValue={operation.get("produces_value")}
+                    path={path}
+                    method={method}
+                    displayRequestDuration={displayRequestDuration}
                     fn={fn} />
-              }
-  </section>
-			  </div>
-        
+                }
+              </section>
             </div>
+
+          </div>
 
         </div>
-        </section>
+      </section>
 
     )
   }

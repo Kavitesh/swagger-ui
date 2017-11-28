@@ -96,11 +96,9 @@ export default class Info extends React.Component {
     const VersionStamp = getComponent("VersionStamp")
 
     return (
-      <div className="info opblock-show opblock opblock-options">
         <div className="description">  
           <div dangerouslySetInnerHTML={createMarkup(description)} />
         </div>
-      </div>
     )
   }
 
