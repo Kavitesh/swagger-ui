@@ -598,7 +598,6 @@ export const getSampleSchema = (schema, contentType = "", config = {}) => {
     }
     return memoizedCreateXMLExample(schema, config)
   }
-  console.log(schema)
   if (schema.json) {
     return "{ \"" + schema.json.name + "\": " + JSON.stringify(memoizedSampleFromSchema(schema, config), null, 3) + "\n}"
   }
@@ -727,7 +726,6 @@ export const showHide = (displayClass) => {
 
 
 export const showHideChild = (tag, id) => {
-  console.log("debud")
   var self = document.getElementsByClassName("parent-" + tag)[0];
   if (self.classList.contains("sidebar-index-isopen")) {
     var x = self.childNodes;
