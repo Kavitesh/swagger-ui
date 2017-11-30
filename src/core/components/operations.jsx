@@ -5,10 +5,42 @@ import { createDeepLinkPath } from "core/utils"
 import { show } from "core/utils"
 import { showHide } from "core/utils"
 import { showHideChild } from "core/utils"
-import { sidebarLoad} from "core/utils"
+import { sidebarLoad } from "core/utils"
 const { opId } = helpers
 
+
 export default class Operations extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { searchValue: '', searching: false , searchPlaceHolder:"Search"};
+
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleSearchClose = this.handleSearchClose.bind(this);
+    this.handleSearchFocus = this.handleSearchFocus.bind(this);
+    this.handleSearchBlur = this.handleSearchBlur.bind(this);
+  }
+
+  handleSearch(event) {
+    if (event.target.value.length > 2) {
+      this.setState({ searchValue: event.target.value, searching: true, searchPlaceHolder:"" });
+    } else {
+      this.setState({ searchValue: event.target.value, searching: false , searchPlaceHolder:""});
+    }
+  }
+
+  handleSearchClose(event) {
+    this.setState({ searchValue: '', searching: false, searchPlaceHolder:"Search" });
+  }
+
+  handleSearchFocus(event){
+    this.setState({ searchValue: this.state.searchValue, searching: this.state.searching, searchPlaceHolder:"" });
+  }
+
+  handleSearchBlur(event){
+    this.setState({ searchValue: this.state.searchValue, searching: this.state.searching, searchPlaceHolder:"Search" });
+    
+  }
 
   static propTypes = {
     specSelectors: PropTypes.object.isRequired,
@@ -23,7 +55,7 @@ export default class Operations extends React.Component {
   };
 
   render() {
-  
+
     let {
       specSelectors,
       specActions,
@@ -45,13 +77,13 @@ export default class Operations extends React.Component {
     const Markdown = getComponent("Markdown")
 
     let info = specSelectors.info()
-	
+
     let url = specSelectors.url()
     let basePath = specSelectors.basePath()
     let host = specSelectors.host()
     let externalDocs = specSelectors.externalDocs()
     let Info = getComponent("info")
-	
+
     let showSummary = layoutSelectors.showSummary()
     let {
       docExpansion,
@@ -80,60 +112,101 @@ export default class Operations extends React.Component {
 
     return (
       <div>
-  
-  <aside className='sidebar'>
-					<a className={layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")])?"sidebar-index sidebar-root-item sidebar-root-item-button":"sidebar-root-item sidebar-root-item-button"}  href={isDeepLinkingEnabled ? `#/info` : null}  onClick={show.bind(null,"info","sidebar-info")} id="sidebar-info">Overview		</a>
-	{
-		taggedOps.map( (tagObj, tag) => {
-              let operations = tagObj.get("operations")
-              let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
-              let isShownKey = ["operations-tag", createDeepLinkPath(tag)]
-              let showTag = layoutSelectors.isShown(isShownKey)
-			return(
 
-					<div key={tag} className={showTag? "sidebar-index-isopen parent-"+ tag + " sidebar-root-item" : "parent-"+ tag + " sidebar-root-item"}>
-          
-          <a className="sidebar-root-item-fold" href={isDeepLinkingEnabled ? `#/${isShownKey[1]}` : null}  onClick={showHideChild.bind(null,tag,"sidebar-"+tag)}  id={"sidebar-"+tag}>{tag}</a>{
-						operations.map( op => {
-						
-							const path = op.get("path", "")
-							const method = op.get("method", "")
-							const operationId =
-							op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
-              
-              const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
-              let showOp = layoutSelectors.isShown(isShownKey)
-              if(showOp){
-                somethingShown = true;
+        <aside className='sidebar'>
+          <div className='search-box'> 
+          <input type="text" value={this.state.searchValue} onChange={this.handleSearch} placeholder={this.state.searchPlaceHolder}
+onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
+          <button className="search-close" onClick={this.handleSearchClose}>X</button>
+          </div>
+          <div className={this.state.searching ? "opblock-hidden " : "sidebar-list"}>
+            <a className={layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "sidebar-index sidebar-root-item sidebar-root-item-button" : "sidebar-root-item sidebar-root-item-button"} href={isDeepLinkingEnabled ? `#/info` : null} onClick={show.bind(null, "info", "sidebar-info")} id="sidebar-info">Overview		</a>
+            {
+              taggedOps.map((tagObj, tag) => {
+                let operations = tagObj.get("operations")
+                let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
+                let isShownKey = ["operations-tag", createDeepLinkPath(tag)]
+                let showTag = layoutSelectors.isShown(isShownKey)
+                return (
+
+                  <div key={tag} className={showTag ? "sidebar-index-isopen parent-" + tag + " sidebar-root-item" : "parent-" + tag + " sidebar-root-item"}>
+
+                    <a className="sidebar-root-item-fold" href={isDeepLinkingEnabled ? `#/${isShownKey[1]}` : null} onClick={showHideChild.bind(null, tag, "sidebar-" + tag)} id={"sidebar-" + tag}>{tag}</a>{
+                      operations.map(op => {
+
+                        const path = op.get("path", "")
+                        const method = op.get("method", "")
+                        const operationId =
+                          op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
+
+                        const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
+                        let showOp = layoutSelectors.isShown(isShownKey)
+                        if (showOp) {
+                          somethingShown = true;
+                        }
+                        return (
+                          <a className={showOp ? "sidebar-item sidebutton sidebar-index" : "opblock-hidden sidebar-item sidebutton"} key={operationId} name={operationId}
+                            href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null, isShownKey, "sidebar-" + isShownKey.join("-"))} id={"sidebar-" + isShownKey.join("-")}>{operationId}</a>
+
+                        )
+                      }).toArray()
+
+
+                    }
+
+                  </div>
+                )
+
+              }).toArray()
+
+            }
+          </div>
+          <div className={!this.state.searching ? "opblock-hidden " : "sidebar-result"}>
+            {
+              taggedOps.map((tagObj, tag) => {
+                let operations = tagObj.get("operations")
+                let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
+                let isShownKey = ["operations-tag", createDeepLinkPath(tag)]
+                let showTag = layoutSelectors.isShown(isShownKey)
+                return (
+                  operations.map(op => {
+
+                    const path = op.get("path", "")
+                    const method = op.get("method", "")
+                    const operationId =
+                      op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
+
+                    const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
+                    let showOp = layoutSelectors.isShown(isShownKey)
+                    if (showOp) {
+                      somethingShown = true;
+                    }
+                    return (
+                      <a className={isShownKey[2].toLowerCase().includes(this.state.searchValue.toLowerCase()) ? "sidebar-item sidebutton" : "opblock-hidden"} key={"search-" + operationId} name={"search-" + operationId}
+                        href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null, isShownKey, "sidebar-" + isShownKey.join("-"))} id={"sidebar-" + isShownKey.join("-")}>{operationId}</a>
+
+                    )
+                  }).toArray())
+
+
               }
-              return (
 
-							<a className={showOp ? "sidebar-item sidebutton sidebar-index":"opblock-hidden sidebar-item sidebutton"} key={operationId} name={operationId} 
-              href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null,isShownKey,"sidebar-"+isShownKey.join("-"))} id={"sidebar-"+isShownKey.join("-")}>{operationId}</a>
               )
-						}).toArray()
-						}
-						
-            </div>
-      )
 
-		}).toArray()
-		
-    }
-    
-	</aside>
+            }
+          </div>
+        </aside>
 
-  
-  <section className="main-section">
-   <div className={!somethingShown || layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "info opblock-show opblock opblock-options" : "info opblock-show opblock opblock-options opblock-hidden"}>
-    {
-      info.count() ? (
-                  <Info info={ info } url={ url } host={ host } basePath={ basePath } externalDocs={externalDocs} getComponent={getComponent}/>
-                ) : null }
-                </div>
-        <div>
+
+        <section className="main-section">
+          <div className={!somethingShown || layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "info opblock-show opblock opblock-options" : "info opblock-show opblock opblock-options opblock-hidden"}>
+            {
+              info.count() ? (
+                <Info info={info} url={url} host={host} basePath={basePath} externalDocs={externalDocs} getComponent={getComponent} />
+              ) : null}
+          </div>
           {
-            taggedOps.map( (tagObj, tag) => {
+            taggedOps.map((tagObj, tag) => {
               let operations = tagObj.get("operations")
               let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
               let tagExternalDocsDescription = tagObj.getIn(["tagDetails", "externalDocs", "description"])
@@ -144,63 +217,62 @@ export default class Operations extends React.Component {
               let showTag = layoutSelectors.isShown(isShownKey)
               return (
                 <div className="opblock-tag-section" key={"operation-" + tag}>
-                    {
-                      operations.map( op => {
+                  {
+                    operations.map(op => {
 
-                        const path = op.get("path", "")
-                        const method = op.get("method", "")
-                        const jumpToKey = `paths.${path}.${method}`
+                      const path = op.get("path", "")
+                      const method = op.get("method", "")
+                      const jumpToKey = `paths.${path}.${method}`
 
-                        const operationId =
+                      const operationId =
                         op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
-                        const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
+                      const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
 
-                        const allowTryItOut = specSelectors.allowTryItOutFor(op.get("path"), op.get("method"))
-                        const response = specSelectors.responseFor(op.get("path"), op.get("method"))
-                        const request = specSelectors.requestFor(op.get("path"), op.get("method"))
+                      const allowTryItOut = specSelectors.allowTryItOutFor(op.get("path"), op.get("method"))
+                      const response = specSelectors.responseFor(op.get("path"), op.get("method"))
+                      const request = specSelectors.requestFor(op.get("path"), op.get("method"))
 
-                        return <Operation
-                          {...op.toObject()}
+                      return <Operation
+                        {...op.toObject() }
 
-                          isShownKey={isShownKey}
-                          jumpToKey={jumpToKey}
-                          showSummary={showSummary}
-                          key={isShownKey}
-                          response={ response }
-                          request={ request }
-                          allowTryItOut={allowTryItOut}
+                        isShownKey={isShownKey}
+                        jumpToKey={jumpToKey}
+                        showSummary={showSummary}
+                        key={isShownKey}
+                        response={response}
+                        request={request}
+                        allowTryItOut={allowTryItOut}
 
-                          displayOperationId={displayOperationId}
-                          displayRequestDuration={displayRequestDuration}
+                        displayOperationId={displayOperationId}
+                        displayRequestDuration={displayRequestDuration}
 
-                          specActions={ specActions }
-                          specSelectors={ specSelectors }
+                        specActions={specActions}
+                        specSelectors={specSelectors}
 
-                          oas3Actions={oas3Actions}
+                        oas3Actions={oas3Actions}
 
-                          layoutActions={ layoutActions }
-                          layoutSelectors={ layoutSelectors }
+                        layoutActions={layoutActions}
+                        layoutSelectors={layoutSelectors}
 
-                          authActions={ authActions }
-                          authSelectors={ authSelectors }
+                        authActions={authActions}
+                        authSelectors={authSelectors}
 
-                          getComponent={ getComponent }
-                          fn={fn}
-                          getConfigs={ getConfigs }
-                        />
-                      }).toArray()
-                    }
+                        getComponent={getComponent}
+                        fn={fn}
+                        getConfigs={getConfigs}
+                      />
+                    }).toArray()
+                  }
                 </div>
-                )
+              )
             }).toArray()
           }
-          { taggedOps.size < 1 ? <h3> No operations defined in spec! </h3> : null }
-        </div>
-		</section>
-    </div>
-    
+          {taggedOps.size < 1 ? <h3> No operations defined in spec! </h3> : null}
+        </section>
+      </div>
+
     )
-    
+
   }
 
 }

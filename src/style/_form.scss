@@ -28,15 +28,6 @@ select
     }
 }
 
-.opblock-body select
-{
-    min-width: 230px;
-    @media (max-width: 768px)
-    {
-        min-width: 180px;
-    }
-}
-
 label
 {
     font-size: 12px;

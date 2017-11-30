@@ -158,7 +158,6 @@ export default class Operation extends PureComponent {
     let shown = this.isShown()
     let onChangeKey = [path, method] // Used to add values to _this_ operation ( indexed by path and method )
     return (
-      <section>
         <div className={deprecated ? "opblock opblock-deprecated opblock-hidden opblock-show" : shown ? `opblock opblock-${method} opblock-show ` : `opblock opblock-hidden opblock-show opblock-${method}`} id={isShownKey.join("-")} >
 
           <div className="opblock-summary">
@@ -284,7 +283,6 @@ export default class Operation extends PureComponent {
           </div>
 
         </div>
-      </section>
 
     )
   }
