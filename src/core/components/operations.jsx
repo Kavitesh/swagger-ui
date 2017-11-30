@@ -38,7 +38,11 @@ export default class Operations extends React.Component {
   }
 
   handleSearchBlur(event){
-    this.setState({ searchValue: this.state.searchValue, searching: this.state.searching, searchPlaceHolder:"Search" });
+    if(this.state.searching){
+      this.setState({ searchValue: this.state.searchValue, searching: this.state.searching, searchPlaceHolder:"Search" });
+    }else{
+      this.setState({ searchValue: "", searching: this.state.searching, searchPlaceHolder:"Search" });
+    }
     
   }
 
@@ -114,7 +118,7 @@ export default class Operations extends React.Component {
       <div>
 
         <aside className='sidebar'>
-          <div className='search-box'> 
+          <div  className={this.state.searching ? "search-box searching":"search-box"}> 
           <input type="text" value={this.state.searchValue} onChange={this.handleSearch} placeholder={this.state.searchPlaceHolder}
 onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
           <button className="search-close" onClick={this.handleSearchClose}>X</button>

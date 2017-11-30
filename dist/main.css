@@ -454,11 +454,11 @@ body {
 }
 
 
-.search-box input:focus{
+.searching input, .search-box input:focus{
     box-shadow: inset 0 0 1px #b90b67, 0 0 2px #b90b67;
 }
 
-.search-box input:focus + .search-close{
+.search-box input:focus + .search-close, .searching .search-close{
 	color : #b90b67 !important; 
     font-size: 12px!important;
     font-weight: bold!important;
