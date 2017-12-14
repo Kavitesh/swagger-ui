@@ -707,8 +707,11 @@ export const show = (key, id) => {
   var x;
   if (key == "info" || key == "models") {
     x = document.getElementsByClassName(key)[0];
+    history.replaceState({}, key , `#/${key}`);
   } else {
     x = document.getElementById(key.join("-"));
+    var url = `#/${key[1]}/${key[2]}`;
+    history.replaceState({}, `${key[2]}` , url);
   }
   x.classList.remove("opblock-hidden");
   setSidebarIndex(id);
@@ -753,6 +756,13 @@ export const showHideChild = (tag, id) => {
       open.classList.remove("sidebar-index-isopen");
     }
     self.classList.add("sidebar-index-isopen");
+    setTimeout(function(){
+      var child = self.getElementsByClassName("sidebar-item");
+      if(child.length>0){
+        child[0].click();
+      }
+    },0);
+    
   }
 }
 

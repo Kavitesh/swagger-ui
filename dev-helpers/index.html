@@ -54,10 +54,10 @@
 
 
   <div class="topnav" id="myTopnav">
-    <a href="#" title="Overview" onclick="setEditorMode(true)">
+    <a href="#" id="guide-button" title="Overview" onclick="setEditorMode(true)">
       <span>Guides</span>
     </a>
-    <a href="#" title="Reference" onclick="setEditorMode(false)">
+    <a href="#" class="selected-tab" id="api-button" title="Reference" onclick="setEditorMode(false)">
       <span>Reference</span>
     </a>
   </div>
@@ -79,11 +79,10 @@
         <p>Some Overview
         </p>
         <p> Click
-          <a onclick="setEditorMode(false)">here</span> to see detailed documentation of the api </p>
+          <a href="#" onclick="setEditorMode(false)">here</a> to see detailed documentation of the api </p>
       </div>
     </div>
   </div>
-
   <script src="./swagger-ui-bundle.js"> </script>
   <script src="./swagger-ui-standalone-preset.js"> </script>
   <script src="./main.js"> </script>

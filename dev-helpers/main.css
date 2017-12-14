@@ -38,19 +38,30 @@ body {
 	line-height: normal !important;
 	background-color: #b90b67;
 	overflow: hidden;
+	padding-top: 2px;
+}
+.topnav #guide-button{
+	margin-left: 16px;
 }
 .topnav a {
+	border-radius:3px 3px 0 0 ;
+	border: 1px solid #b90b67;
 	float: left;
 	display: block;
 	color: #f2f2f2;
 	text-align: center;
-	padding: 14px 16px;
+	padding: 8px;
 	text-decoration: none;
 	font-size: 17px;
 }
 .topnav a:hover {
+	background-color: #f7f7f7;
+	color: #b90b67;
+}
+.topnav .selected-tab {
+	color: #b90b67;
+	border: 1px solid #ccc;
 	background-color: #ffffff;
-	color: black;
 }
 .topnav a.active {
 	background-color: #4CAF50;
@@ -404,3 +415,9 @@ body {
 }
 
 
+
+.description{
+	display:flex;
+	padding: 10px;
+	padding-top: 0;
+}

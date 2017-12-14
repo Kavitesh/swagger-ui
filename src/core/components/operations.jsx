@@ -124,7 +124,7 @@ onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
           <button className="search-close" onClick={this.handleSearchClose}>X</button>
           </div>
           <div className={this.state.searching ? "opblock-hidden " : "sidebar-list"}>
-            <a className={layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "sidebar-index sidebar-root-item sidebar-root-item-button" : "sidebar-root-item sidebar-root-item-button"} href={isDeepLinkingEnabled ? `#/info` : null} onClick={show.bind(null, "info", "sidebar-info")} id="sidebar-info">Overview		</a>
+            <a className={layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "sidebar-index sidebar-root-item sidebar-root-item-button" : "sidebar-root-item sidebar-root-item-button"} onClick={show.bind(null, "info", "sidebar-info")} id="sidebar-info">Overview		</a>
             {
               taggedOps.map((tagObj, tag) => {
                 let operations = tagObj.get("operations")
@@ -135,7 +135,7 @@ onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
 
                   <div key={tag} className={showTag ? "sidebar-index-isopen parent-" + tag + " sidebar-root-item" : "parent-" + tag + " sidebar-root-item"}>
 
-                    <a className="sidebar-root-item-fold" href={isDeepLinkingEnabled ? `#/${isShownKey[1]}` : null} onClick={showHideChild.bind(null, tag, "sidebar-" + tag)} id={"sidebar-" + tag}>{tag}</a>{
+                    <a className="sidebar-root-item-fold" onClick={showHideChild.bind(null, tag, "sidebar-" + tag)} id={"sidebar-" + tag}>{tag}</a>{
                       operations.map(op => {
 
                         const path = op.get("path", "")
@@ -150,7 +150,7 @@ onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
                         }
                         return (
                           <a className={showOp ? "sidebar-item sidebutton sidebar-index" : "opblock-hidden sidebar-item sidebutton"} key={operationId} name={operationId}
-                            href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null, isShownKey, "sidebar-" + isShownKey.join("-"))} id={"sidebar-" + isShownKey.join("-")}>{operationId}</a>
+                           onClick={show.bind(null, isShownKey, "sidebar-" + isShownKey.join("-"))} id={"sidebar-" + isShownKey.join("-")}>{operationId}</a>
 
                         )
                       }).toArray()
@@ -187,7 +187,7 @@ onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
                     }
                     return (
                       <a className={isShownKey[2].toLowerCase().includes(this.state.searchValue.toLowerCase()) ? "sidebar-item sidebutton" : "opblock-hidden"} key={"search-" + operationId} name={"search-" + operationId}
-                        href={isDeepLinkingEnabled ? `#/${isShownKey[1]}/${isShownKey[2]}` : null} onClick={show.bind(null, isShownKey, "sidebar-" + isShownKey.join("-"))} id={"sidebar-" + isShownKey.join("-")}>{operationId}</a>
+                        onClick={show.bind(null, isShownKey, "sidebar-" + isShownKey.join("-"))} id={"sidebar-" + isShownKey.join("-")}>{operationId}</a>
 
                     )
                   }).toArray())
