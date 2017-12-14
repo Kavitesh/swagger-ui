@@ -155,7 +155,7 @@ export default class Operation extends PureComponent {
     }
 
     let { tryItOutEnabled } = this.state
-    let shown = this.isShown()
+    let shown = window.location.href.indexOf(`?${isShownKey[1]}/${isShownKey[2]}`)>-1//this.isShown()
     let onChangeKey = [path, method] // Used to add values to _this_ operation ( indexed by path and method )
     return (
         <div className={deprecated ? "opblock opblock-deprecated opblock-hidden opblock-show" : shown ? `opblock opblock-${method} opblock-show ` : `opblock opblock-hidden opblock-show opblock-${method}`} id={isShownKey.join("-")} >

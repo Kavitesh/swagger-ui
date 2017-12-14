@@ -707,10 +707,10 @@ export const show = (key, id) => {
   var x;
   if (key == "info" || key == "models") {
     x = document.getElementsByClassName(key)[0];
-    history.replaceState({}, key , `#/${key}`);
+    history.replaceState({}, key , `?${key}`);
   } else {
     x = document.getElementById(key.join("-"));
-    var url = `#/${key[1]}/${key[2]}`;
+    var url = `?${key[1]}/${key[2]}`;
     history.replaceState({}, `${key[2]}` , url);
   }
   x.classList.remove("opblock-hidden");
