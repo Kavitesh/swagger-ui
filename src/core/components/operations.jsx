@@ -124,13 +124,13 @@ onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
           <button className="search-close" onClick={this.handleSearchClose}>X</button>
           </div>
           <div className={this.state.searching ? "opblock-hidden " : "sidebar-list"}>
-            <a className={layoutSelectors.isShown(["operations-tag", createDeepLinkPath("info")]) ? "sidebar-index sidebar-root-item sidebar-root-item-button" : "sidebar-root-item sidebar-root-item-button"} onClick={show.bind(null, "info", "sidebar-info")} id="sidebar-info">Overview		</a>
+            <a className={window.location.href.indexOf("?info")>-1 ? "sidebar-index sidebar-root-item sidebar-root-item-button" : "sidebar-root-item sidebar-root-item-button"} onClick={show.bind(null, "info", "sidebar-info")} id="sidebar-info">Overview		</a>
             {
               taggedOps.map((tagObj, tag) => {
                 let operations = tagObj.get("operations")
                 let tagDescription = tagObj.getIn(["tagDetails", "description"], null)
                 let isShownKey = ["operations-tag", createDeepLinkPath(tag)]
-                let showTag = layoutSelectors.isShown(isShownKey)
+                let showTag = window.location.href.indexOf(`?${isShownKey[1]}`)>-1//layoutSelectors.isShown(isShownKey)
                 return (
 
                   <div key={tag} className={showTag ? "sidebar-index-isopen parent-" + tag + " sidebar-root-item" : "parent-" + tag + " sidebar-root-item"}>
@@ -144,7 +144,7 @@ onFocus={this.handleSearchFocus} onBlur={this.handleSearchBlur}></input>
                           op.getIn(["operation", "operationId"]) || op.getIn(["operation", "__originalOperationId"]) || opId(op.get("operation"), path, method) || op.get("id")
 
                         const isShownKey = ["operations", createDeepLinkPath(tag), createDeepLinkPath(operationId)]
-                        let showOp = layoutSelectors.isShown(isShownKey)
+                        let showOp = window.location.href.indexOf(`?${isShownKey[1]}/${isShownKey[2]}`)>-1//layoutSelectors.isShown(isShownKey)
                         if (showOp) {
                           somethingShown = true;
                         }
