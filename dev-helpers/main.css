@@ -22,7 +22,10 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 }
-.main-section{padding-top:15px;}
+.main-section{
+	padding-top:15px;
+    width: 100%;
+}
 #editor-wrapper {
 	height: 100%;
 	border: 1emsolid#000;
@@ -420,4 +423,308 @@ body {
 	display:flex;
 	padding: 10px;
 	padding-top: 0;
+}
+
+/* Back Skin */
+.navbar-black{
+	cursor: pointer;
+	padding: 0.5rem 1rem;
+	background-color: #e9ecef ;
+	
+    font-family: "DINPro", sans-serif;
+    font-size: 1.05rem;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #343a40;
+    text-align: left;
+}
+
+.navbar-black h1 {
+    font-size: 2.24rem;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 0.4rem;
+    color: #ba0b68;
+    line-height: 1;
+}
+
+.navbar-black h2 {
+    -webkit-margin-before: 0.83em;
+    -webkit-margin-after: 0.83em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-size: 0.645rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Sidebar black */
+
+.sidebar-black .tab-black:hover {
+    background: #212529;
+}
+
+.sidebar-black .tab-black{
+	
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-orient: horizontal;
+-webkit-box-direction: normal;
+-ms-flex-direction: row;
+flex-direction: row;
+padding: 0;
+transition: all 0.4s ease-in-out;
+transition-delay: 0.1s;
+}
+
+.main-container {
+    margin: 0;
+    padding: 0;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.sidebar-black {
+	background: #343a40;
+}
+.sidebar-black  h6 {
+    display: block;
+    font-size: 0.67em;
+    -webkit-margin-before: 2.33em;
+    -webkit-margin-after: 2.33em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+.sidebar-black .tab-black .tab-icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-width: 125px;
+    padding: 1rem 0.6rem;
+    padding-left: 0.3rem;
+    border-left: 0.3rem solid transparent;
+    text-align: center;
+    cursor: pointer;
+    color: #FFF;
+    transition: all 0.4s ease-in-out;
+    transition-delay: 0.1s;
+}
+
+.sidebar-black .sidebar-black .tab-black .tab-icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-width: 125px;
+    padding: 1rem 0.6rem;
+    padding-left: 0.3rem;
+    border-left: 0.3rem solid transparent;
+    text-align: center;
+    cursor: pointer;
+    color: #FFF;
+    transition: all 0.4s ease-in-out;
+    transition-delay: 0.1s;
+}
+.sidebar-black .tab-black:hover .tab-sub-items {
+    max-height: 400px;
+    max-width: 400px;
+}
+
+.sidebar-black .tab-black .tab-sub-items {
+    display: block;
+    list-style: none outside none;
+    padding: 0;
+    width: 100%;
+    text-align: left;
+    margin: 0;
+    overflow: hidden;
+    max-height: 80px;
+    max-width: 0;
+    transition: all 0.4s ease-in-out;
+    transition-delay: 0.2s;
+}
+
+.sidebar-black .tab-black .tab-sub-items a {
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: block;
+    padding: 0.6rem;
+    line-height: 1;
+    width: 100%;
+    color: #adb5bd;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sidebar-black .tab-black .tab-sub-items a:hover {
+    color: #FFF;
+}
+
+.sidebar-black .tab-black:hover .tab-icon i {
+    font-size: 3rem;
+}
+
+.sidebar-black .tab-black:hover .tab-icon .tab-title {
+    display: none;
+}
+
+.sidebar-black .tab-black .tab-icon i {
+    font-size: 1.2rem;
+    line-height: 1;
+    margin: 0;
+}
+.sidebar-black .tab-black .tab-icon .tab-title {
+    font-size: 0.9rem;
+    line-height: 1;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+
+
+.sidebar-black li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.sidebar-black .active-tab .tab-icon {
+    background: #fff;
+    color: #343a40 !important;
+    border-left: 0.3rem solid #ba0b68 !important;
+}
+
+
+
+.sidebar-black .active-tab .tab-icon {
+    background: #fff;
+    color: #343a40 !important;
+    border-left: 0.3rem solid #ba0b68 !important;
+}
+
+
+.search-tab {
+	border: 1px solid;
+	border-color: #bcbcbc;
+	margin: 2px;
+	background : #ffffff!important;
+	overflow:hidden;
+	border-radius: 3px;
+}
+
+.search-list li a{ 
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: block;
+    padding: 0.6rem;
+    line-height: 1;
+    width: 100%;
+    color: #adb5bd;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+.search-list li a:hover{ 
+    color: #FFF;
+
+}
+
+.search-list li {
+    padding: 4px;
+	 display: list-item;
+}
+
+.search-list ul { 
+	list-style: none outside none;
+	    -webkit-padding-start: 0px;
+}
+.black-search-box{
+	width: 116px;
+	margin: 2px;
+}
+
+
+.black-searching{
+	width: inherit;
+}
+.black-search-box input{
+	    min-width: 0!important;
+    font-weight: bold!important;
+    outline: 0;
+    text-indent: 5px !important;
+    max-width: 999px !important;
+    width: 90% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: left;
+    height: 30px !important;
+    border: 0 !important;
+    color: #3b4151 !important;
+	border-radius : 0 !important;
+}
+
+.black-searching input{
+	width:	220px
+}
+.black-searching button{
+	display: flex;
+    border: 0 !important;
+    margin: 0px !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    height: 30px !important;
+    font-size: 10px!important;
+    color: #ffffff !important;
+    float: right;
+    color: #ffffff !important;
+    font-size: 12px!important;
+    font-weight: bold!important;
+    background: #b90b67!important;
+    padding: 4px !important;
+}
+
+
+.search-close {
+    font-weight: bold!important;
+    border: 0 !important;
+    margin: 0px !important;
+    box-shadow: none !important;
+    height: 30px !important;
+    font-size: 10px!important;
+    color: #ffffff !important;
+    float: left;
+    background:#ffffff;
+}
+
+.search-section{
+	margin: 2px;	
+	margin-bottom: 5px;	
+	display: table;
 }
